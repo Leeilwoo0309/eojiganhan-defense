@@ -1,0 +1,28 @@
+type Player = {
+    id: number;
+    nickname: string;
+    selector: HTMLDivElement | null;
+    state: {
+        hp: [number, number]; // 최대체력, 현재체력
+        barrier: [[number, number][]?];
+    };
+    position: { x: number; y: number };
+    halfSize: number;
+    stat: Stat;
+};
+
+type Stat = {
+    ad: number;
+    attackSpeed: number;
+    criticalChance: number;
+    criticalDamage: number;
+
+    moveSpeed: number;
+    armor: number;
+    armorPercent: number;
+    hpRegeneration: number;
+    ccTimeDown: number;
+};
+
+type Position = { x: number; y: number };
+type Type = "adc" | "mage" | "tanker" | "supporter";

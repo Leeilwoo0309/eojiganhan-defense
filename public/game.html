@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <link rel="stylesheet" href="./styles/game.css" />
+        <link rel="stylesheet" href="./styles/player.css" />
+        <link rel="stylesheet" href="./styles/global.css" />
+        <title>어지간한 디펜스 - 게임</title>
+    </head>
+    <body>
+        <main role="main">
+            <div id="objs"></div>
+            <div id="game">
+                <div class="player" id="p0"></div>
+                <div class="player" id="p1"></div>
+                <div class="player" id="p2"></div>
+                <div class="player" id="p3"></div>
+            </div>
+        </main>
+        <!-- GUIS -->
+        <footer>
+            <div class="gui center" id="top-gui" style="width: 500px">
+                <div>
+                    <p class="gold" style="color: yellow">150000G</p>
+                </div>
+                <div>
+                    <p class="title">WAVE 155</p>
+                    <p class="small">남은 몹: 10</p>
+                </div>
+                <div>
+                    <p>jewoo081013</p>
+                </div>
+            </div>
+        </footer>
+
+        <script src="../src/js/game/methods/random.js"></script>
+        <script src="../src/js/game/methods/entity.js"></script>
+        <script src="../src/js/game/methods/player.js"></script>
+        <script src="../src/js/game/methods/object.js"></script>
+
+        <script src="../src/js/game/start.js"></script>
+        <script src="../src/js/game/update.js"></script>
+    </body>
+</html>

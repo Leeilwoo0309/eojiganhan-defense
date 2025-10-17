@@ -1,0 +1,23 @@
+@font-face {
+    font-family: "Isamanru";
+    src: url("https://cdn.jsdelivr.net/gh/projectnoonnu/noonfonts_20-10@1.0/GongGothicLight.woff")
+        format("woff");
+    font-weight: 300;
+    font-display: swap;
+}
+
+body {
+    padding: 0;
+    margin: 0;
+
+    background-image: url(../assets/background.png);
+
+    overflow: hidden;
+
+    font-family: "Isamanru";
+}
+
+div {
+    position: absolute;
+    will-change: transform;
+}
