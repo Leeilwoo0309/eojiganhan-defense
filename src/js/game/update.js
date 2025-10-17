@@ -11,7 +11,7 @@ setInterval(function () {
 function animationLoop() {
     // 플레이어 위치 재조정
     player.forEach(function (e, i) {
-        e.playerAnimations();
+        e.entityAnimations();
     });
     // GameObject 클래스 위치 재조정
     objects.forEach(function (e, i) {

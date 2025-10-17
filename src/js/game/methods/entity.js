@@ -45,7 +45,7 @@ var Entity = /** @class */ (function () {
      * 플레이어 애니메이션(움직임, 크기)
      * @param id 변경할 플레이어의 id
      */
-    Entity.prototype.playerAnimations = function () {
+    Entity.prototype.entityAnimations = function () {
         var _this = this;
         if (this.selector instanceof HTMLDivElement) {
             var x = this.position.x - cameraPosition.x - this.halfSize;
@@ -71,6 +71,55 @@ var Entity = /** @class */ (function () {
                         e.style.width = "100%";
                 }
             });
+        }
+    };
+    Entity.prototype.getDamage = function (damage, type, isSent) {
+        if (isSent === void 0) { isSent = false; }
+        var finalDamage = damage;
+        if (type === "melee")
+            finalDamage *= 100 / (100 + this.stat.armor);
+        if (type !== "true")
+            finalDamage *= 1 - this.stat.armorPercent;
+        this.state.hp[0] -= finalDamage;
+        //@ts-ignore
+        var parent = document.querySelector(".damage-print.".concat(this.entityType).concat(this.id));
+        var alerter = document.createElement("div");
+        var textColor = {
+            melee: "rgb(227, 106, 14)",
+            magic: "rgb(14, 124, 227)",
+            true: "white",
+            heal: "rgb(0, 180, 0)",
+        };
+        var shadowColor = {
+            melee: "rgba(148, 64, 0, 1)",
+            magic: "rgba(0, 76, 147, 1)",
+            true: "rgba(136, 136, 136, 1)",
+            heal: "rgba(0, 106, 0, 1)",
+        };
+        if (Math.round(damage) == 0)
+            return;
+        alerter.innerHTML = "".concat(Math.round(damage));
+        alerter.style.opacity = "100%";
+        alerter.style.marginTop = "-".concat(Math.random() * 20 + 40, "px");
+        alerter.style.marginLeft = "".concat(Math.random() * 50 - 20, "px");
+        alerter.style.color = "".concat(textColor[type]);
+        alerter.style.fontSize = "".concat(Math.log(damage * 4) + 15, "px");
+        alerter.style.transition = "opacity 300ms";
+        alerter.style.position = "fixed ";
+        alerter.style.textShadow = "0px 0px 2px ".concat(shadowColor[type]);
+        alerter.style.transform = "scale(1.7, 1.7)";
+        parent.appendChild(alerter);
+        setTimeout(function () {
+            alerter.style.transition = "400 cubic-bezier(0, 0, 0, 0.97);";
+            alerter.style.transform = "scale(1, 1)";
+        }, 10);
+        setTimeout(function () {
+            alerter.style.opacity = "0%";
+        }, 300);
+        setTimeout(function () {
+            alerter.style.display = "none";
+        }, 600);
+        if (isSent) {
         }
     };
     Entity.prototype.setTotalBarrier = function () {

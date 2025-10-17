@@ -60,7 +60,7 @@ class Entity {
      * 플레이어 애니메이션(움직임, 크기)
      * @param id 변경할 플레이어의 id
      */
-    public playerAnimations() {
+    public entityAnimations() {
         if (this.selector instanceof HTMLDivElement) {
             const x = this.position.x - cameraPosition.x - this.halfSize;
             const y = -this.position.y + cameraPosition.y - this.halfSize;
@@ -98,6 +98,64 @@ class Entity {
                     if (e.classList.contains("barrier")) e.style.width = `100%`;
                 }
             });
+        }
+    }
+
+    public getDamage(damage: number, type: DamageType, isSent: boolean = false) {
+        let finalDamage: number = damage;
+
+        if (type === "melee") finalDamage *= 100 / (100 + this.stat.armor);
+        if (type !== "true") finalDamage *= 1 - this.stat.armorPercent;
+
+        this.state.hp[0] -= finalDamage;
+
+        //@ts-ignore
+        const parent: HTMLDivElement = document.querySelector(
+            `.damage-print.${this.entityType}${this.id}`
+        );
+        const alerter: HTMLDivElement = document.createElement("div");
+        const textColor = {
+            melee: "rgb(227, 106, 14)",
+            magic: "rgb(14, 124, 227)",
+            true: "white",
+            heal: "rgb(0, 180, 0)",
+        };
+        const shadowColor = {
+            melee: "rgba(148, 64, 0, 1)",
+            magic: "rgba(0, 76, 147, 1)",
+            true: "rgba(136, 136, 136, 1)",
+            heal: "rgba(0, 106, 0, 1)",
+        };
+
+        if (Math.round(damage) == 0) return;
+
+        alerter.innerHTML = `${Math.round(damage)}`;
+        alerter.style.opacity = "100%";
+        alerter.style.marginTop = `-${Math.random() * 20 + 40}px`;
+        alerter.style.marginLeft = `${Math.random() * 50 - 20}px`;
+        alerter.style.color = `${textColor[type]}`;
+        alerter.style.fontSize = `${Math.log(damage * 4) + 15}px`;
+        alerter.style.transition = "opacity 300ms";
+        alerter.style.position = "fixed ";
+        alerter.style.textShadow = `0px 0px 2px ${shadowColor[type]}`;
+        alerter.style.transform = "scale(1.7, 1.7)";
+
+        parent.appendChild(alerter);
+
+        setTimeout(() => {
+            alerter.style.transition = "400 cubic-bezier(0, 0, 0, 0.97);";
+            alerter.style.transform = "scale(1, 1)";
+        }, 10);
+
+        setTimeout(() => {
+            alerter.style.opacity = "0%";
+        }, 300);
+
+        setTimeout(() => {
+            alerter.style.display = "none";
+        }, 600);
+
+        if (isSent) {
         }
     }
 
