@@ -33,7 +33,18 @@ var Entity = /** @class */ (function () {
         this.id = id;
         this.entityType = typeParam;
         // this.nickname = nickname;
-        this.selector = document.querySelector(".".concat(this.entityType, "#p").concat(id));
+        if (typeParam === "monster") {
+            var newMonster = document.createElement("div");
+            var monstersParent = document.querySelector(".monsters-div");
+            newMonster.classList.add("monster");
+            newMonster.id = "m".concat(this.id);
+            this.selector = newMonster;
+            if (monstersParent instanceof HTMLDivElement)
+                monstersParent.appendChild(newMonster);
+        }
+        else {
+            this.selector = document.querySelector(".".concat(this.entityType, "#p").concat(id));
+        }
         this.selector.style.top = "0px";
         if (this.id === id) {
             this.selector.style.backgroundColor = "blue";

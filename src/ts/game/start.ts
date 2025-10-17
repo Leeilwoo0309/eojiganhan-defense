@@ -4,6 +4,7 @@ const BODY = document.body;
 const centerDiv: NodeListOf<HTMLDivElement> = document.querySelectorAll(".center");
 
 let player: PlayerClass[] = [new PlayerClass(0, "Vv지존새우vV")];
+let monster: Monster[] = [];
 let keyDown: { [key in string]: boolean } = {};
 let winSize: Position = { x: 1600, y: 900 };
 let cameraPosition: Position = { x: 0, y: 0 };

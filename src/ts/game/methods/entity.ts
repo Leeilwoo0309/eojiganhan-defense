@@ -35,7 +35,19 @@ class Entity {
         this.id = id;
         this.entityType = typeParam;
         // this.nickname = nickname;
-        this.selector = document.querySelector(`.${this.entityType}#p${id}`) as HTMLDivElement;
+
+        if (typeParam === "monster") {
+            const newMonster = document.createElement("div");
+            const monstersParent = document.querySelector(".monsters-div");
+
+            newMonster.classList.add("monster");
+            newMonster.id = `m${this.id}`;
+            this.selector = newMonster;
+
+            if (monstersParent instanceof HTMLDivElement) monstersParent.appendChild(newMonster);
+        } else {
+            this.selector = document.querySelector(`.${this.entityType}#p${id}`) as HTMLDivElement;
+        }
 
         this.selector.style.top = "0px";
 

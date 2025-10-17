@@ -15,6 +15,9 @@ function animationLoop() {
         e.entityAnimations();
     });
 
+    // 몬스터 위치 재조정
+    monster.forEach((e) => e.entityAnimations());
+
     // GameObject 클래스 위치 재조정
     objects.forEach((e, i) => {
         e.updatePosition();

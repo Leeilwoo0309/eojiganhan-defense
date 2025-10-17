@@ -3,6 +3,7 @@ var ID = 0;
 var BODY = document.body;
 var centerDiv = document.querySelectorAll(".center");
 var player = [new PlayerClass(0, "Vv지존새우vV")];
+var monster = [];
 var keyDown = {};
 var winSize = { x: 1600, y: 900 };
 var cameraPosition = { x: 0, y: 0 };
