@@ -18,7 +18,7 @@ var Entity = /** @class */ (function () {
         this.halfSize = 15;
         this.stat = {
             ad: 20,
-            attackSpeed: 1,
+            attackSpeed: 10,
             criticalChance: 0,
             criticalDamage: 1.5,
             moveSpeed: 5,

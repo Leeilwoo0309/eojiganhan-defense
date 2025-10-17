@@ -11,6 +11,7 @@ type ProjectileInfoINIT = {
     tag: string;
     target?: [boolean, string | undefined];
     id: number;
+    damageType: DamageType;
 };
 
 type ProjectileInfoHit = {
@@ -31,6 +32,7 @@ class Projectile {
         tag: "", // 태그
         target: [false, undefined], // 타겟 [여부, 대상]
         id: ID, // 발사자
+        damageType: "melee",
     };
     public projectileHit: ProjectileInfoHit = {
         damage: 0,
@@ -43,12 +45,12 @@ class Projectile {
         height: 10,
     };
     public style = {
-        color: undefined,
-        opacity: undefined,
+        color: "red",
+        opacity: 100,
     };
     private _movedDistance: number = 0;
 
-    public start(type: "blue" | "red") {
+    public start(type: "player" | "monster") {
         const _main: HTMLElement | null = document.querySelector(".projectiles");
 
         let _projectile = document.createElement("div");
@@ -105,25 +107,16 @@ class Projectile {
             }px`;
 
             if (this.projectileHit.damage > 0) {
-                runEachTeam((e) => {
+                monster.forEach((e) => {
                     if (
                         this.isCollideWithPlayer2(_projectile, e.id) &&
                         !this.projectileINIT.isCollide
                     ) {
                         this.projectileINIT.isCollide = true;
 
-                        // e.status.hp[1] -= this.projectileHit.damage;
-
-                        let damageAmount = this.projectileHit.damage - e.ability.armor;
-
-                        if (damageAmount < 0) damageAmount = 0;
-
                         // damage(damageAmount, e.id);
 
-                        if (e.status.hp[1] <= 0) {
-                            e.status.isArrive = false;
-                            e.temp.spawnWait = this.projectileINIT.id;
-                        }
+                        e.getDamage(this.projectileHit.damage, this.projectileINIT.damageType);
 
                         if (!this.projectileINIT.isCanPass) this.projectileINIT.isArrive = false;
                     }
@@ -154,7 +147,7 @@ class Projectile {
     }
 
     public isCollideWithPlayer2(projectileSelector: HTMLDivElement, id: number): boolean {
-        const rect1 = findPlayerById(id).selector.getBoundingClientRect();
+        const rect1 = monster[id - 100].selector.getBoundingClientRect();
         const rect2 = projectileSelector.getBoundingClientRect();
 
         return !(
@@ -185,9 +178,9 @@ class ProjectileBuilder {
             speed: info.speed,
             tag: info.tag,
             target: info?.target ?? [false, undefined],
-            team: info.team,
             id: info.id,
             isTarget: info.isTarget,
+            damageType: info.damageType,
         };
         return this;
     }
@@ -209,13 +202,13 @@ class ProjectileBuilder {
         return this;
     }
 
-    public setStyle(style: { color?: string; opacity?: number }): ProjectileBuilder {
+    public setStyle(style: { color: string; opacity: number }): ProjectileBuilder {
         this.projectile.style.color = style?.color;
         this.projectile.style.opacity = style?.opacity;
         return this;
     }
 
-    public build(type: "blue" | "red") {
+    public build(type: "monster" | "player") {
         this.projectile.start(type);
 
         return this.projectile;

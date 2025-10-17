@@ -10,7 +10,7 @@ class Entity {
     public halfSize: number = 15;
     public stat: Stat = {
         ad: 20,
-        attackSpeed: 1,
+        attackSpeed: 10,
         criticalChance: 0,
         criticalDamage: 1.5,
 

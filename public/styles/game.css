@@ -77,3 +77,16 @@
     font-size: 20px;
     color: yellow;
 }
+
+.projectile {
+    --projectil-size: 20px;
+
+    position: absolute;
+
+    width: var(--projectil-size);
+    height: var(--projectil-size);
+
+    border-radius: 100%;
+
+    background-color: black;
+}

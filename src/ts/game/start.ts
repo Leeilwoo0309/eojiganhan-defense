@@ -4,10 +4,14 @@ const BODY = document.body;
 const centerDiv: NodeListOf<HTMLDivElement> = document.querySelectorAll(".center");
 
 let player: PlayerClass[] = [new PlayerClass(0, "Vv지존새우vV")];
-let monster: Monster[] = [];
+let monster: Monster[] = [new Monster(100)];
+let projectiles: Projectile[] = [];
+
 let keyDown: { [key in string]: boolean } = {};
+let mouseDown: [boolean, boolean, boolean] = [false, false, false];
 let winSize: Position = { x: 1600, y: 900 };
 let cameraPosition: Position = { x: 0, y: 0 };
+let mousePosition: Position = { x: 0, y: 0 };
 
 let objects: GameObject[] = [
     new GameObjectBuilder()
@@ -48,6 +52,23 @@ document.body.addEventListener("keyup", (e) => {
 
     if (key === " ") key = "space";
     keyDown[key] = false;
+});
+
+BODY.style.width = "17000px";
+BODY.style.height = "17000px";
+
+// 마우스 위치 구함
+BODY.addEventListener("mousemove", (e) => {
+    mousePosition.x = e.clientX + cameraPosition.x;
+    mousePosition.y = -e.clientY + cameraPosition.y;
+});
+
+BODY.addEventListener("mousedown", (e) => {
+    mouseDown[e.button] = true;
+});
+
+BODY.addEventListener("mouseup", (e) => {
+    mouseDown[e.button] = false;
 });
 
 /** 게임 시작 시 작동하는 코드 */

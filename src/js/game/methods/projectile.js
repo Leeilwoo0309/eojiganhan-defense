@@ -13,6 +13,7 @@ var Projectile = /** @class */ (function () {
             tag: "", // 태그
             target: [false, undefined], // 타겟 [여부, 대상]
             id: ID, // 발사자
+            damageType: "melee",
         };
         this.projectileHit = {
             damage: 0,
@@ -25,8 +26,8 @@ var Projectile = /** @class */ (function () {
             height: 10,
         };
         this.style = {
-            color: undefined,
-            opacity: undefined,
+            color: "red",
+            opacity: 100,
         };
         this._movedDistance = 0;
     }
@@ -72,19 +73,12 @@ var Projectile = /** @class */ (function () {
             _projectile.style.left = "".concat(_this.positionSize.x - cameraPosition.x - _this.positionSize.width / 2, "px");
             _projectile.style.top = "".concat(-_this.positionSize.y + cameraPosition.y - _this.positionSize.height / 2, "px");
             if (_this.projectileHit.damage > 0) {
-                runEachTeam(function (e) {
+                monster.forEach(function (e) {
                     if (_this.isCollideWithPlayer2(_projectile, e.id) &&
                         !_this.projectileINIT.isCollide) {
                         _this.projectileINIT.isCollide = true;
-                        // e.status.hp[1] -= this.projectileHit.damage;
-                        var damageAmount = _this.projectileHit.damage - e.ability.armor;
-                        if (damageAmount < 0)
-                            damageAmount = 0;
                         // damage(damageAmount, e.id);
-                        if (e.status.hp[1] <= 0) {
-                            e.status.isArrive = false;
-                            e.temp.spawnWait = _this.projectileINIT.id;
-                        }
+                        e.getDamage(_this.projectileHit.damage, _this.projectileINIT.damageType);
                         if (!_this.projectileINIT.isCanPass)
                             _this.projectileINIT.isArrive = false;
                     }
@@ -110,7 +104,7 @@ var Projectile = /** @class */ (function () {
         }, 16);
     };
     Projectile.prototype.isCollideWithPlayer2 = function (projectileSelector, id) {
-        var rect1 = findPlayerById(id).selector.getBoundingClientRect();
+        var rect1 = monster[id - 100].selector.getBoundingClientRect();
         var rect2 = projectileSelector.getBoundingClientRect();
         return !(rect1.right < rect2.left ||
             rect1.left > rect2.right ||
@@ -136,9 +130,9 @@ var ProjectileBuilder = /** @class */ (function () {
             speed: info.speed,
             tag: info.tag,
             target: (_e = info === null || info === void 0 ? void 0 : info.target) !== null && _e !== void 0 ? _e : [false, undefined],
-            team: info.team,
             id: info.id,
             isTarget: info.isTarget,
+            damageType: info.damageType,
         };
         return this;
     };

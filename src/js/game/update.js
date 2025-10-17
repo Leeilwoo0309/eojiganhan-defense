@@ -1,10 +1,39 @@
 "use strict";
 requestAnimationFrame(animationLoop);
+var atkWait = 0;
 // update 메인
 setInterval(function () {
     movePlayer();
     setVariables();
+    if (mouseDown[0] && atkWait <= 0) {
+        console.log("object");
+        atkWait += 100 / player[0].stat.attackSpeed;
+        var angle = Math.atan2(player[0].position.y - mousePosition.y, player[0].position.x - mousePosition.x);
+        projectiles.push(new ProjectileBuilder()
+            .setInfo({
+            angle: angle,
+            reach: 700,
+            speed: 30,
+            tag: "aa",
+            id: ID,
+            damageType: "magic",
+        })
+            .setHitInfo({
+            critical: [0, 0],
+            damage: player[0].stat.ad,
+        })
+            .setStyle({
+            color: "blue",
+            opacity: 100,
+        })
+            .setPositionSize(player[0].position.x, player[0].position.y, 20, 20)
+            .build("player"));
+    }
 }, 16);
+setInterval(function () {
+    if (atkWait > 0)
+        atkWait -= 1;
+}, 10);
 /**
  * 모든 애니메이션들 총집합 | 모든 div들의 위치 재조정
  */

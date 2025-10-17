@@ -41,10 +41,14 @@ function movePlayer() {
         velocityVector.y /= Math.SQRT2;
     }
 
-    if (Math.abs(player[ID].position.x + velocityVector.x) < 1132)
+    if (Math.abs(player[ID].position.x + velocityVector.x) < 1132) {
         player[ID].position.x += velocityVector.x;
-    if (Math.abs(player[ID].position.y + velocityVector.y) < 1132)
+        mousePosition.x += velocityVector.x;
+    }
+    if (Math.abs(player[ID].position.y + velocityVector.y) < 1132) {
         player[ID].position.y += velocityVector.y;
+        mousePosition.y += velocityVector.y;
+    }
 
     cameraPosition.x = player[ID].position.x - window.innerWidth * 0.5;
     cameraPosition.y = player[ID].position.y + window.innerHeight * 0.5;
