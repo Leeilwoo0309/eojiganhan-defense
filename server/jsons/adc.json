@@ -1,0 +1,17 @@
+{
+    "stat": {
+        "ad": 50,
+        "attackSpeed": 10,
+        "criticalChance": 0,
+        "criticalDamage": 1.5,
+
+        "moveSpeed": 5,
+        "armor": 0,
+        "armorPercent": 0,
+        "hpRegeneration": 5,
+        "ccTimeDown": 0
+    },
+    "state": {
+        "hp": [100, 100]
+    }
+}

@@ -1,5 +1,6 @@
 class PlayerClass extends Entity {
     public nickname: string = "감자전";
+    public className: PlayerClassNames = "adc";
     public gold: number = 0;
     public exp: number = 0;
     public level: number = 1;
@@ -22,6 +23,12 @@ class PlayerClass extends Entity {
             </div>
         `;
     }
+
+    public getDistance(position: Position): number {
+        return Math.sqrt(
+            Math.pow(position.x - this.position.x, 2) + Math.pow(position.y - this.position.y, 2)
+        );
+    }
 }
 
 /**
@@ -30,10 +37,10 @@ class PlayerClass extends Entity {
 function movePlayer() {
     let velocityVector = { x: 0, y: 0 };
 
-    if (keyDown.w) velocityVector.y += player[ID].stat.moveSpeed;
-    if (keyDown.a) velocityVector.x -= player[ID].stat.moveSpeed;
-    if (keyDown.s) velocityVector.y -= player[ID].stat.moveSpeed;
-    if (keyDown.d) velocityVector.x += player[ID].stat.moveSpeed;
+    if (keyDown.w) velocityVector.y += getPlayerById(ID).stat.moveSpeed;
+    if (keyDown.a) velocityVector.x -= getPlayerById(ID).stat.moveSpeed;
+    if (keyDown.s) velocityVector.y -= getPlayerById(ID).stat.moveSpeed;
+    if (keyDown.d) velocityVector.x += getPlayerById(ID).stat.moveSpeed;
 
     // 대각선 이동 시 이동속도 감소
     if (velocityVector.x * velocityVector.x == velocityVector.y * velocityVector.y) {
@@ -41,17 +48,17 @@ function movePlayer() {
         velocityVector.y /= Math.SQRT2;
     }
 
-    if (Math.abs(player[ID].position.x + velocityVector.x) < 1132) {
-        player[ID].position.x += velocityVector.x;
+    if (Math.abs(getPlayerById(ID).position.x + velocityVector.x) < 1132) {
+        getPlayerById(ID).position.x += velocityVector.x;
         mousePosition.x += velocityVector.x;
     }
-    if (Math.abs(player[ID].position.y + velocityVector.y) < 1132) {
-        player[ID].position.y += velocityVector.y;
+    if (Math.abs(getPlayerById(ID).position.y + velocityVector.y) < 1132) {
+        getPlayerById(ID).position.y += velocityVector.y;
         mousePosition.y += velocityVector.y;
     }
 
-    cameraPosition.x = player[ID].position.x - window.innerWidth * 0.5;
-    cameraPosition.y = player[ID].position.y + window.innerHeight * 0.5;
+    cameraPosition.x = getPlayerById(ID).position.x - window.innerWidth * 0.5;
+    cameraPosition.y = getPlayerById(ID).position.y + window.innerHeight * 0.5;
 }
 
 function getPlayerById(id: number): PlayerClass {

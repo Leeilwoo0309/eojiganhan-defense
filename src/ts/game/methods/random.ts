@@ -1,3 +1,3 @@
-function getRandomNumber(max: number): number {
-    return Math.floor(Math.random() * (max + 1));
+function rand(min: number, max: number): number {
+    return Math.floor(Math.random() * (max - min + 1)) + min;
 }

@@ -19,6 +19,7 @@ var PlayerClass = /** @class */ (function (_super) {
     function PlayerClass(id, nickname) {
         var _this = _super.call(this, id, "player") || this;
         _this.nickname = "감자전";
+        _this.className = "adc";
         _this.gold = 0;
         _this.exp = 0;
         _this.level = 1;
@@ -26,6 +27,9 @@ var PlayerClass = /** @class */ (function (_super) {
         _this.selector.innerHTML = "\n            <div class=\"info\">\n                <span id=\"nickname\">".concat(_this.nickname, "</span>\n            </div>\n\n            <div class=\"hp player").concat(_this.id, "\">\n                <div class=\"hp-progress later player").concat(_this.id, "\"></div>\n                <div class=\"hp-progress barrier player").concat(_this.id, "\"></div>\n                <div class=\"hp-progress player").concat(_this.id, "\"></div>\n            </div>\n            <div class=\"damage-print player").concat(_this.id, "\">\n            </div>\n        ");
         return _this;
     }
+    PlayerClass.prototype.getDistance = function (position) {
+        return Math.sqrt(Math.pow(position.x - this.position.x, 2) + Math.pow(position.y - this.position.y, 2));
+    };
     return PlayerClass;
 }(Entity));
 /**
@@ -34,28 +38,28 @@ var PlayerClass = /** @class */ (function (_super) {
 function movePlayer() {
     var velocityVector = { x: 0, y: 0 };
     if (keyDown.w)
-        velocityVector.y += player[ID].stat.moveSpeed;
+        velocityVector.y += getPlayerById(ID).stat.moveSpeed;
     if (keyDown.a)
-        velocityVector.x -= player[ID].stat.moveSpeed;
+        velocityVector.x -= getPlayerById(ID).stat.moveSpeed;
     if (keyDown.s)
-        velocityVector.y -= player[ID].stat.moveSpeed;
+        velocityVector.y -= getPlayerById(ID).stat.moveSpeed;
     if (keyDown.d)
-        velocityVector.x += player[ID].stat.moveSpeed;
+        velocityVector.x += getPlayerById(ID).stat.moveSpeed;
     // 대각선 이동 시 이동속도 감소
     if (velocityVector.x * velocityVector.x == velocityVector.y * velocityVector.y) {
         velocityVector.x /= Math.SQRT2;
         velocityVector.y /= Math.SQRT2;
     }
-    if (Math.abs(player[ID].position.x + velocityVector.x) < 1132) {
-        player[ID].position.x += velocityVector.x;
+    if (Math.abs(getPlayerById(ID).position.x + velocityVector.x) < 1132) {
+        getPlayerById(ID).position.x += velocityVector.x;
         mousePosition.x += velocityVector.x;
     }
-    if (Math.abs(player[ID].position.y + velocityVector.y) < 1132) {
-        player[ID].position.y += velocityVector.y;
+    if (Math.abs(getPlayerById(ID).position.y + velocityVector.y) < 1132) {
+        getPlayerById(ID).position.y += velocityVector.y;
         mousePosition.y += velocityVector.y;
     }
-    cameraPosition.x = player[ID].position.x - window.innerWidth * 0.5;
-    cameraPosition.y = player[ID].position.y + window.innerHeight * 0.5;
+    cameraPosition.x = getPlayerById(ID).position.x - window.innerWidth * 0.5;
+    cameraPosition.y = getPlayerById(ID).position.y + window.innerHeight * 0.5;
 }
 function getPlayerById(id) {
     var ret = [];

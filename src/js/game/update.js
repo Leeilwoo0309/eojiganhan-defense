@@ -15,6 +15,9 @@ setInterval(function () {
     movePlayer();
     setVariables();
     synchronize();
+    if (ID === 0) {
+        monster.forEach(function (e) { return e.chaseTarget(); });
+    }
     if (mouseDown[0] && atkWait <= 0) {
         atkWait += 100 / getPlayerById(ID).stat.attackSpeed;
         var angle = Math.atan2(getPlayerById(ID).position.y - mousePosition.y, getPlayerById(ID).position.x - mousePosition.x);
@@ -25,7 +28,7 @@ setInterval(function () {
             speed: 30,
             tag: "aa",
             id: ID,
-            damageType: "magic",
+            damageType: "melee",
         })
             .setHitInfo({
             critical: [0, 0],
@@ -52,7 +55,10 @@ function animationLoop() {
         e.entityAnimations();
     });
     // 몬스터 위치 재조정
-    monster.forEach(function (e) { return e.entityAnimations(); });
+    monster.forEach(function (e) {
+        e.entityAnimations();
+    });
+    monster = monster.filter(function (x) { return x.state.hp[0] > 0; });
     // GameObject 클래스 위치 재조정
     objects.forEach(function (e, i) {
         e.updatePosition();
@@ -62,6 +68,8 @@ function animationLoop() {
     });
     BODY.style.backgroundPositionX = "".concat(-cameraPosition.x, "px");
     BODY.style.backgroundPositionY = "".concat(cameraPosition.y, "px");
+    if (goldP instanceof HTMLParagraphElement)
+        goldP.innerHTML = "".concat(getPlayerById(ID).gold, "G");
     requestAnimationFrame(animationLoop);
 }
 /**
@@ -90,9 +98,27 @@ function synchronize() {
         projectile: projectiles,
         player: getPlayerById(ID),
         monsters: [],
+        monstersModify: [],
     };
     if (ID === 0) {
-        sendData.monsters = monster;
+        monster.forEach(function (e) {
+            if (e.isSent === false) {
+                sendData.monsters.push(e);
+                e.isSent = true;
+            }
+            else {
+                sendData.monstersModify.push(e);
+            }
+        });
     }
     sendToPlayers("synchronize", sendData);
 }
+var monsterId = 101;
+var generateMonster = setInterval(function () {
+    monster.push(new Monster(monsterId)
+        .setPosition({ x: rand(-1100, 1100), y: rand(-1100, 1100) })
+        .setHpArmor([120, 120], 20));
+    monsterId += 1;
+}, 1000);
+if (ID !== 0)
+    clearInterval(generateMonster);

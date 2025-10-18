@@ -7,6 +7,10 @@ setInterval(() => {
     setVariables();
     synchronize();
 
+    if (ID === 0) {
+        monster.forEach((e) => e.chaseTarget());
+    }
+
     if (mouseDown[0] && atkWait <= 0) {
         atkWait += 100 / getPlayerById(ID).stat.attackSpeed;
         const angle = Math.atan2(
@@ -22,7 +26,7 @@ setInterval(() => {
                     speed: 30,
                     tag: "aa",
                     id: ID,
-                    damageType: "magic",
+                    damageType: "melee",
                 })
                 .setHitInfo({
                     critical: [0, 0],
@@ -52,7 +56,10 @@ function animationLoop() {
     });
 
     // 몬스터 위치 재조정
-    monster.forEach((e) => e.entityAnimations());
+    monster.forEach((e) => {
+        e.entityAnimations();
+    });
+    monster = monster.filter((x) => x.state.hp[0] > 0);
 
     // GameObject 클래스 위치 재조정
     objects.forEach((e, i) => {
@@ -65,6 +72,8 @@ function animationLoop() {
 
     BODY.style.backgroundPositionX = `${-cameraPosition.x}px`;
     BODY.style.backgroundPositionY = `${cameraPosition.y}px`;
+
+    if (goldP instanceof HTMLParagraphElement) goldP.innerHTML = `${getPlayerById(ID).gold}G`;
 
     requestAnimationFrame(animationLoop);
 }
@@ -94,15 +103,42 @@ function synchronize() {
 
     projectiles = [...newProjectile];
 
-    let sendData: { projectile: Projectile[]; player: PlayerClass; monsters: Monster[] } = {
+    let sendData: {
+        projectile: Projectile[];
+        player: PlayerClass;
+        monsters: Monster[];
+        monstersModify: Monster[];
+    } = {
         projectile: projectiles,
         player: getPlayerById(ID),
         monsters: [],
+        monstersModify: [],
     };
 
     if (ID === 0) {
-        sendData.monsters = monster;
+        monster.forEach((e) => {
+            if (e.isSent === false) {
+                sendData.monsters.push(e);
+                e.isSent = true;
+            } else {
+                sendData.monstersModify.push(e);
+            }
+        });
     }
 
     sendToPlayers("synchronize", sendData);
 }
+
+let monsterId: number = 101;
+
+const generateMonster = setInterval(() => {
+    monster.push(
+        new Monster(monsterId)
+            .setPosition({ x: rand(-1100, 1100), y: rand(-1100, 1100) })
+            .setHpArmor([120, 120], 20)
+    );
+
+    monsterId += 1;
+}, 1000);
+
+if (ID !== 0) clearInterval(generateMonster);

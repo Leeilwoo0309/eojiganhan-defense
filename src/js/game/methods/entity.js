@@ -83,14 +83,25 @@ var Entity = /** @class */ (function () {
                 }
             });
         }
+        // if (this.state.hp[0] <= 0) {
+        //     this.death();
+        // }
     };
-    Entity.prototype.getDamage = function (damage, type, isSent) {
+    Entity.prototype.getDamage = function (damage, type, attakerId, isSent) {
         if (isSent === void 0) { isSent = false; }
         var finalDamage = damage;
         if (type === "melee")
             finalDamage *= 100 / (100 + this.stat.armor);
         if (type !== "true")
             finalDamage *= 1 - this.stat.armorPercent;
+        if (ID !== this.id && this.entityType === "player" && !isSent) {
+            sendToPlayers("DAMAGE", {
+                damage: finalDamage,
+                type: type,
+                attakerId: attakerId,
+                target: this.id,
+            });
+        }
         this.state.hp[0] -= finalDamage;
         //@ts-ignore
         var parent = document.querySelector(".damage-print.".concat(this.entityType).concat(this.id));
@@ -107,14 +118,14 @@ var Entity = /** @class */ (function () {
             true: "rgba(136, 136, 136, 1)",
             heal: "rgba(0, 106, 0, 1)",
         };
-        if (Math.round(damage) == 0)
+        if (Math.round(finalDamage) == 0)
             return;
-        alerter.innerHTML = "".concat(Math.round(damage));
+        alerter.innerHTML = "".concat(Math.round(finalDamage));
         alerter.style.opacity = "100%";
         alerter.style.marginTop = "-".concat(Math.random() * 20 + 40, "px");
         alerter.style.marginLeft = "".concat(Math.random() * 50 - 20, "px");
         alerter.style.color = "".concat(textColor[type]);
-        alerter.style.fontSize = "".concat(Math.log(damage * 4) + 15, "px");
+        alerter.style.fontSize = "".concat(Math.log(finalDamage * 4) + 15, "px");
         alerter.style.transition = "opacity 300ms";
         alerter.style.position = "fixed ";
         alerter.style.textShadow = "0px 0px 2px ".concat(shadowColor[type]);
@@ -130,7 +141,19 @@ var Entity = /** @class */ (function () {
         setTimeout(function () {
             alerter.style.display = "none";
         }, 600);
-        if (isSent) {
+        if (this.state.hp[0] <= 0.5) {
+            if (this.entityType === "monster")
+                getPlayerById(attakerId).gold += 150;
+            this.death();
+        }
+    };
+    Entity.prototype.death = function () {
+        var _a;
+        if (this.entityType === "monster") {
+            (_a = document.querySelector(".monsters-div")) === null || _a === void 0 ? void 0 : _a.removeChild(this.selector);
+        }
+        else if (this.entityType === "player") {
+            this.selector.style.display = "none";
         }
     };
     Entity.prototype.modify = function (json) {

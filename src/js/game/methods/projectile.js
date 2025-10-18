@@ -80,7 +80,7 @@ var Projectile = /** @class */ (function () {
                         !_this.projectileINIT.isCollide) {
                         _this.projectileINIT.isCollide = true;
                         // damage(damageAmount, e.id);
-                        e.getDamage(_this.projectileHit.damage, _this.projectileINIT.damageType);
+                        e.getDamage(_this.projectileHit.damage, _this.projectileINIT.damageType, _this.projectileINIT.id);
                         if (!_this.projectileINIT.isCanPass)
                             _this.projectileINIT.isArrive = false;
                     }
@@ -106,7 +106,7 @@ var Projectile = /** @class */ (function () {
         }, 16);
     };
     Projectile.prototype.isCollideWithPlayer2 = function (projectileSelector, id) {
-        var rect1 = monster[id - 100].selector.getBoundingClientRect();
+        var rect1 = getMonsterById(id).selector.getBoundingClientRect();
         var rect2 = projectileSelector.getBoundingClientRect();
         return !(rect1.right < rect2.left ||
             rect1.left > rect2.right ||

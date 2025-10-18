@@ -25,5 +25,5 @@ type Stat = {
 };
 
 type Position = { x: number; y: number };
-type Type = "adc" | "mage" | "tanker" | "supporter";
+type PlayerClassNames = "adc" | "mage" | "tanker" | "supporter";
 type DamageType = "melee" | "magic" | "true";

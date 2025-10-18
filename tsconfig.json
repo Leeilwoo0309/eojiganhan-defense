@@ -1,9 +1,11 @@
 {
     "compilerOptions": {
-        "module": "commonjs",
+        "module": "esnext",
+        "lib": ["ESNext", "DOM"],
         "rootDir": "./src/ts",
         "outDir": "./src/js/",
-        "strict": true
+        "strict": true,
+        "moduleResolution": "node"
     },
     "exclude": ["node_modules"]
 }

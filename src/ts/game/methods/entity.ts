@@ -111,13 +111,26 @@ class Entity {
                 }
             });
         }
+
+        // if (this.state.hp[0] <= 0) {
+        //     this.death();
+        // }
     }
 
-    public getDamage(damage: number, type: DamageType, isSent: boolean = false) {
+    public getDamage(damage: number, type: DamageType, attakerId: number, isSent: boolean = false) {
         let finalDamage: number = damage;
 
         if (type === "melee") finalDamage *= 100 / (100 + this.stat.armor);
         if (type !== "true") finalDamage *= 1 - this.stat.armorPercent;
+
+        if (ID !== this.id && this.entityType === "player" && !isSent) {
+            sendToPlayers("DAMAGE", {
+                damage: finalDamage,
+                type: type,
+                attakerId: attakerId,
+                target: this.id,
+            });
+        }
 
         this.state.hp[0] -= finalDamage;
 
@@ -139,14 +152,14 @@ class Entity {
             heal: "rgba(0, 106, 0, 1)",
         };
 
-        if (Math.round(damage) == 0) return;
+        if (Math.round(finalDamage) == 0) return;
 
-        alerter.innerHTML = `${Math.round(damage)}`;
+        alerter.innerHTML = `${Math.round(finalDamage)}`;
         alerter.style.opacity = "100%";
         alerter.style.marginTop = `-${Math.random() * 20 + 40}px`;
         alerter.style.marginLeft = `${Math.random() * 50 - 20}px`;
         alerter.style.color = `${textColor[type]}`;
-        alerter.style.fontSize = `${Math.log(damage * 4) + 15}px`;
+        alerter.style.fontSize = `${Math.log(finalDamage * 4) + 15}px`;
         alerter.style.transition = "opacity 300ms";
         alerter.style.position = "fixed ";
         alerter.style.textShadow = `0px 0px 2px ${shadowColor[type]}`;
@@ -167,7 +180,17 @@ class Entity {
             alerter.style.display = "none";
         }, 600);
 
-        if (isSent) {
+        if (this.state.hp[0] <= 0.5) {
+            if (this.entityType === "monster") getPlayerById(attakerId).gold += 150;
+            this.death();
+        }
+    }
+
+    public death() {
+        if (this.entityType === "monster") {
+            document.querySelector(".monsters-div")?.removeChild(this.selector);
+        } else if (this.entityType === "player") {
+            this.selector.style.display = "none";
         }
     }
 

@@ -36,15 +36,44 @@ socket.onopen = () => {
 
                 player.push(new PlayerClass(receivedJson.header.id, receivedJson.header.nickname));
                 player.sort((x, y) => x.id - y.id);
+            } else if (message == "DAMAGE") {
+                //@ts-ignore
+                const data: { target: number; damage: number; type: DamageType; attkerId: number } =
+                    receivedJson.body.data;
+                if (data.target === ID) {
+                    getPlayerById(ID).getDamage(data.damage, data.type, data.attkerId, true);
+                }
             } else if (message == "SYNCHRONIZE") {
                 //@ts-ignore
-                const kimchi: { projectile: Projectile[]; player: PlayerClass } =
-                    receivedJson.body.data;
+                const kimchi: {
+                    projectile: Projectile[];
+                    player: PlayerClass;
+                    monsters: Monster[];
+                    monstersModify: Monster[];
+                } = receivedJson.body.data;
 
                 kimchi.projectile.forEach((e) => {
                     e.projectileINIT.isSent = true;
 
                     projectiles.push(new Projectile().modify(e));
+                });
+
+                kimchi.monsters.forEach((e) => {
+                    monster.push(
+                        new Monster(e.id)
+                            .setHpArmor(e.state.hp, e.stat.armor)
+                            .setPosition(e.position)
+                    );
+                });
+
+                kimchi.monstersModify.forEach((e) => {
+                    const mon = getMonsterById(e.id);
+
+                    if (mon?.position) {
+                        mon.position = e.position;
+                        mon.state.hp = e.state.hp;
+                        mon.stat.armor = e.stat.armor;
+                    }
                 });
 
                 getPlayerById(kimchi.player.id).modify(kimchi.player);
@@ -62,3 +91,13 @@ type Protocol = {
         data: Object;
     };
 };
+
+function getMonsterById(id: number): Monster {
+    let ret: Monster;
+    monster.forEach((e) => {
+        if (e.id === id) ret = e;
+    });
+
+    //@ts-ignore
+    return ret;
+}

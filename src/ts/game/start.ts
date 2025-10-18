@@ -5,9 +5,10 @@ const NICKNAME: string = param.get("nickname") as string;
 const BODY = document.body;
 
 const centerDiv: NodeListOf<HTMLDivElement> = document.querySelectorAll(".center");
+const goldP = document.querySelector(".gold");
 
 let player: PlayerClass[] = [new PlayerClass(ID, NICKNAME)];
-let monster: Monster[] = [new Monster(100)];
+let monster: Monster[] = [];
 let projectiles: Projectile[] = [];
 
 let keyDown: { [key in string]: boolean } = {};
@@ -74,5 +75,20 @@ BODY.addEventListener("mouseup", (e) => {
     mouseDown[e.button] = false;
 });
 
+async function getClassData(className: string) {
+    let ret = await fetch(`http://kimchi-game.kro.kr:1975/class/${className}`, {
+        method: "GET",
+    }).then((r) => r.json());
+
+    return ret;
+}
+
 /** 게임 시작 시 작동하는 코드 */
-function start() {}
+async function start() {
+    const classData = await getClassData("adc");
+
+    getPlayerById(ID).stat = classData.stat;
+    getPlayerById(ID).state.hp = classData.state.hp;
+}
+
+start();

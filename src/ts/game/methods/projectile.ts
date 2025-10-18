@@ -119,7 +119,11 @@ class Projectile {
 
                         // damage(damageAmount, e.id);
 
-                        e.getDamage(this.projectileHit.damage, this.projectileINIT.damageType);
+                        e.getDamage(
+                            this.projectileHit.damage,
+                            this.projectileINIT.damageType,
+                            this.projectileINIT.id
+                        );
 
                         if (!this.projectileINIT.isCanPass) this.projectileINIT.isArrive = false;
                     }
@@ -150,7 +154,7 @@ class Projectile {
     }
 
     public isCollideWithPlayer2(projectileSelector: HTMLDivElement, id: number): boolean {
-        const rect1 = monster[id - 100].selector.getBoundingClientRect();
+        const rect1 = getMonsterById(id).selector.getBoundingClientRect();
         const rect2 = projectileSelector.getBoundingClientRect();
 
         return !(
