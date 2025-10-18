@@ -29,13 +29,15 @@ var Projectile = /** @class */ (function () {
             color: "red",
             opacity: 100,
         };
+        this.whoType = "player";
         this._movedDistance = 0;
     }
     Projectile.prototype.start = function (type) {
         var _this = this;
+        this.whoType = type;
         var _main = document.querySelector(".projectiles");
         var _projectile = document.createElement("div");
-        _projectile.className = "".concat(type, " projectile");
+        _projectile.className = "".concat(this.whoType, " projectile");
         _projectile.style.width = "".concat(this.positionSize.width, "px");
         _projectile.style.height = "".concat(this.positionSize.height, "px");
         _projectile.style.rotate = "".concat(-this.projectileINIT.angle + Math.PI / 2, "rad");
@@ -110,6 +112,14 @@ var Projectile = /** @class */ (function () {
             rect1.left > rect2.right ||
             rect1.bottom < rect2.top ||
             rect1.top > rect2.bottom);
+    };
+    Projectile.prototype.modify = function (json) {
+        this.positionSize = json.positionSize;
+        this.projectileHit = json.projectileHit;
+        this.projectileINIT = json.projectileINIT;
+        this.style = json.style;
+        this.start(json.whoType);
+        return this;
     };
     return Projectile;
 }());

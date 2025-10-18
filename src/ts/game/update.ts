@@ -5,14 +5,13 @@ let atkWait = 0;
 setInterval(() => {
     movePlayer();
     setVariables();
+    synchronize();
 
     if (mouseDown[0] && atkWait <= 0) {
-        console.log("object");
-
-        atkWait += 100 / player[0].stat.attackSpeed;
+        atkWait += 100 / getPlayerById(ID).stat.attackSpeed;
         const angle = Math.atan2(
-            player[0].position.y - mousePosition.y,
-            player[0].position.x - mousePosition.x
+            getPlayerById(ID).position.y - mousePosition.y,
+            getPlayerById(ID).position.x - mousePosition.x
         );
 
         projectiles.push(
@@ -27,13 +26,13 @@ setInterval(() => {
                 })
                 .setHitInfo({
                     critical: [0, 0],
-                    damage: player[0].stat.ad,
+                    damage: getPlayerById(ID).stat.ad,
                 })
                 .setStyle({
                     color: "blue",
                     opacity: 100,
                 })
-                .setPositionSize(player[0].position.x, player[0].position.y, 20, 20)
+                .setPositionSize(getPlayerById(ID).position.x, getPlayerById(ID).position.y, 20, 20)
                 .build("player")
         );
     }
@@ -76,4 +75,34 @@ function animationLoop() {
 function setVariables() {
     winSize.x = window.innerWidth;
     winSize.y = window.innerHeight;
+}
+
+/**
+ * 동기화
+ */
+function synchronize() {
+    let newProjectile: Projectile[] = [];
+
+    projectiles.forEach((e) => {
+        if (e.projectileINIT.isSent || !e.projectileINIT.isArrive) return;
+
+        if (e.projectileINIT.id == ID) newProjectile.push(e);
+        if (ID === 0 && e.projectileINIT.id >= 100) newProjectile.push(e);
+
+        e.projectileINIT.isSent = true;
+    });
+
+    projectiles = [...newProjectile];
+
+    let sendData: { projectile: Projectile[]; player: PlayerClass; monsters: Monster[] } = {
+        projectile: projectiles,
+        player: getPlayerById(ID),
+        monsters: [],
+    };
+
+    if (ID === 0) {
+        sendData.monsters = monster;
+    }
+
+    sendToPlayers("synchronize", sendData);
 }

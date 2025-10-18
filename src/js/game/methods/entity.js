@@ -133,6 +133,18 @@ var Entity = /** @class */ (function () {
         if (isSent) {
         }
     };
+    Entity.prototype.modify = function (json) {
+        this.id = json.id;
+        this.entityType = json.entityType;
+        this.halfSize = json.halfSize;
+        this.position = json.position;
+        this.stat = json.stat;
+        this.state = json.state;
+        if (this.entityType === "player") {
+            this.selector = document.querySelector("#p".concat(this.id));
+        }
+        return this;
+    };
     Entity.prototype.setTotalBarrier = function () {
         var _this = this;
         var _a;

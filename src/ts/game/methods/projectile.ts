@@ -48,14 +48,17 @@ class Projectile {
         color: "red",
         opacity: 100,
     };
+    public whoType: "player" | "monster" = "player";
     private _movedDistance: number = 0;
 
     public start(type: "player" | "monster") {
+        this.whoType = type;
+
         const _main: HTMLElement | null = document.querySelector(".projectiles");
 
         let _projectile = document.createElement("div");
 
-        _projectile.className = `${type} projectile`;
+        _projectile.className = `${this.whoType} projectile`;
         _projectile.style.width = `${this.positionSize.width}px`;
         _projectile.style.height = `${this.positionSize.height}px`;
         _projectile.style.rotate = `${-this.projectileINIT.angle + Math.PI / 2}rad`;
@@ -156,6 +159,17 @@ class Projectile {
             rect1.bottom < rect2.top ||
             rect1.top > rect2.bottom
         );
+    }
+
+    public modify(json: Projectile) {
+        this.positionSize = json.positionSize;
+        this.projectileHit = json.projectileHit;
+        this.projectileINIT = json.projectileINIT;
+        this.style = json.style;
+
+        this.start(json.whoType);
+
+        return this;
     }
 }
 

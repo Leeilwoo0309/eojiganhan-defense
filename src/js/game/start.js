@@ -1,8 +1,10 @@
 "use strict";
-var ID = 0;
+var param = new URLSearchParams(window.location.search);
+var ID = Number(param.get("id"));
+var NICKNAME = param.get("nickname");
 var BODY = document.body;
 var centerDiv = document.querySelectorAll(".center");
-var player = [new PlayerClass(0, "Vv지존새우vV")];
+var player = [new PlayerClass(ID, NICKNAME)];
 var monster = [new Monster(100)];
 var projectiles = [];
 var keyDown = {};

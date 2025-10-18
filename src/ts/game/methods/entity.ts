@@ -171,6 +171,21 @@ class Entity {
         }
     }
 
+    public modify(json: PlayerClass) {
+        this.id = json.id;
+        this.entityType = json.entityType;
+        this.halfSize = json.halfSize;
+        this.position = json.position;
+        this.stat = json.stat;
+        this.state = json.state;
+
+        if (this.entityType === "player") {
+            this.selector = document.querySelector(`#p${this.id}`) as HTMLDivElement;
+        }
+
+        return this;
+    }
+
     private setTotalBarrier() {
         this.totalBarrier = 0;
 

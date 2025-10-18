@@ -53,3 +53,13 @@ function movePlayer() {
     cameraPosition.x = player[ID].position.x - window.innerWidth * 0.5;
     cameraPosition.y = player[ID].position.y + window.innerHeight * 0.5;
 }
+
+function getPlayerById(id: number): PlayerClass {
+    let ret: PlayerClass[] = [];
+
+    player.forEach((e, i) => {
+        if (e.id === id) ret[0] = e;
+    });
+
+    return ret[0];
+}

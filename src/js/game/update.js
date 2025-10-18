@@ -1,14 +1,23 @@
 "use strict";
+var __spreadArray = (this && this.__spreadArray) || function (to, from, pack) {
+    if (pack || arguments.length === 2) for (var i = 0, l = from.length, ar; i < l; i++) {
+        if (ar || !(i in from)) {
+            if (!ar) ar = Array.prototype.slice.call(from, 0, i);
+            ar[i] = from[i];
+        }
+    }
+    return to.concat(ar || Array.prototype.slice.call(from));
+};
 requestAnimationFrame(animationLoop);
 var atkWait = 0;
 // update 메인
 setInterval(function () {
     movePlayer();
     setVariables();
+    synchronize();
     if (mouseDown[0] && atkWait <= 0) {
-        console.log("object");
-        atkWait += 100 / player[0].stat.attackSpeed;
-        var angle = Math.atan2(player[0].position.y - mousePosition.y, player[0].position.x - mousePosition.x);
+        atkWait += 100 / getPlayerById(ID).stat.attackSpeed;
+        var angle = Math.atan2(getPlayerById(ID).position.y - mousePosition.y, getPlayerById(ID).position.x - mousePosition.x);
         projectiles.push(new ProjectileBuilder()
             .setInfo({
             angle: angle,
@@ -20,13 +29,13 @@ setInterval(function () {
         })
             .setHitInfo({
             critical: [0, 0],
-            damage: player[0].stat.ad,
+            damage: getPlayerById(ID).stat.ad,
         })
             .setStyle({
             color: "blue",
             opacity: 100,
         })
-            .setPositionSize(player[0].position.x, player[0].position.y, 20, 20)
+            .setPositionSize(getPlayerById(ID).position.x, getPlayerById(ID).position.y, 20, 20)
             .build("player"));
     }
 }, 16);
@@ -61,4 +70,29 @@ function animationLoop() {
 function setVariables() {
     winSize.x = window.innerWidth;
     winSize.y = window.innerHeight;
+}
+/**
+ * 동기화
+ */
+function synchronize() {
+    var newProjectile = [];
+    projectiles.forEach(function (e) {
+        if (e.projectileINIT.isSent || !e.projectileINIT.isArrive)
+            return;
+        if (e.projectileINIT.id == ID)
+            newProjectile.push(e);
+        if (ID === 0 && e.projectileINIT.id >= 100)
+            newProjectile.push(e);
+        e.projectileINIT.isSent = true;
+    });
+    projectiles = __spreadArray([], newProjectile, true);
+    var sendData = {
+        projectile: projectiles,
+        player: getPlayerById(ID),
+        monsters: [],
+    };
+    if (ID === 0) {
+        sendData.monsters = monster;
+    }
+    sendToPlayers("synchronize", sendData);
 }

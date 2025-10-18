@@ -1,9 +1,12 @@
-const ID = 0;
+const param = new URLSearchParams(window.location.search);
+
+const ID: number = Number(param.get("id"));
+const NICKNAME: string = param.get("nickname") as string;
 const BODY = document.body;
 
 const centerDiv: NodeListOf<HTMLDivElement> = document.querySelectorAll(".center");
 
-let player: PlayerClass[] = [new PlayerClass(0, "Vv지존새우vV")];
+let player: PlayerClass[] = [new PlayerClass(ID, NICKNAME)];
 let monster: Monster[] = [new Monster(100)];
 let projectiles: Projectile[] = [];
 
