@@ -1,17 +1,30 @@
 {
     "stat": {
-        "ad": 20,
-        "attackSpeed": 10,
+        "ad": 15,
+        "attackSpeed": 1.3,
         "criticalChance": 0,
         "criticalDamage": 1.5,
 
-        "moveSpeed": 5,
-        "armor": 0,
+        "moveSpeed": 4.5,
+        "armor": 25,
         "armorPercent": 0,
-        "hpRegeneration": 5,
+        "hpRegeneration": 10,
         "ccTimeDown": 0
     },
     "state": {
-        "hp": [100, 100]
+        "hp": [250, 250]
+    },
+    "growth": {
+        "ad": 3,
+        "attackSpeed": 1.135,
+        "criticalChance": 0,
+        "criticalDamage": 0,
+
+        "moveSpeed": 0,
+        "armor": 10,
+        "armorPercent": 0,
+        "hpRegeneration": 3,
+        "ccTimeDown": 0,
+        "hp": 75
     }
 }

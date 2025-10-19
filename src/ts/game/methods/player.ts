@@ -2,12 +2,16 @@ class PlayerClass extends Entity {
     public nickname: string = "감자전";
     public className: PlayerClassNames = "adc";
     public gold: number = 0;
-    public exp: number = 0;
+    /** [레벨, 경험치] */
+    public exp: [number, number] = [0, 0];
     public level: number = 1;
+    public runes: number[] = [];
 
-    constructor(id: number, nickname: string) {
+    constructor(id: number, nickname: string, className: PlayerClassNames, runes: number[]) {
         super(id, "player");
         this.nickname = nickname;
+        this.className = className;
+        this.runes = runes;
 
         this.selector.innerHTML = `
             <div class="info">

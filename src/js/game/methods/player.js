@@ -16,14 +16,18 @@ var __extends = (this && this.__extends) || (function () {
 })();
 var PlayerClass = /** @class */ (function (_super) {
     __extends(PlayerClass, _super);
-    function PlayerClass(id, nickname) {
+    function PlayerClass(id, nickname, className, runes) {
         var _this = _super.call(this, id, "player") || this;
         _this.nickname = "감자전";
         _this.className = "adc";
         _this.gold = 0;
-        _this.exp = 0;
+        /** [레벨, 경험치] */
+        _this.exp = [0, 0];
         _this.level = 1;
+        _this.runes = [];
         _this.nickname = nickname;
+        _this.className = className;
+        _this.runes = runes;
         _this.selector.innerHTML = "\n            <div class=\"info\">\n                <span id=\"nickname\">".concat(_this.nickname, "</span>\n            </div>\n\n            <div class=\"hp player").concat(_this.id, "\">\n                <div class=\"hp-progress later player").concat(_this.id, "\"></div>\n                <div class=\"hp-progress barrier player").concat(_this.id, "\"></div>\n                <div class=\"hp-progress player").concat(_this.id, "\"></div>\n            </div>\n            <div class=\"damage-print player").concat(_this.id, "\">\n            </div>\n        ");
         return _this;
     }

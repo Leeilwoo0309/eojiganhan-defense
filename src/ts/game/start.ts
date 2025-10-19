@@ -2,14 +2,26 @@ const param = new URLSearchParams(window.location.search);
 
 const ID: number = Number(param.get("id"));
 const NICKNAME: string = param.get("nickname") as string;
+const CLASS_NAME: PlayerClassNames = param.get("class") as PlayerClassNames;
+const RUNES: number[] = JSON.parse(param.get("runes") as string);
 const BODY = document.body;
 
 const centerDiv: NodeListOf<HTMLDivElement> = document.querySelectorAll(".center");
 const goldP = document.querySelector(".gold");
+const nicknameP = document.querySelector(".nickname");
+const hpBarProgress = document.querySelector(".hp-gui-bar");
+const levelBarProgress = document.querySelector(".level-gui-bar");
+const waveText = document.querySelector(".title");
+const leftMobText = document.querySelector(".small");
 
-let player: PlayerClass[] = [new PlayerClass(ID, NICKNAME)];
+let player: PlayerClass[] = [new PlayerClass(ID, NICKNAME, CLASS_NAME, RUNES)];
 let monster: Monster[] = [];
 let projectiles: Projectile[] = [];
+let wave: number = 1;
+let leftMobs: number = 10;
+let monsterId: number = 101;
+let waveTermTime: number = 0;
+const needExp: number[] = [12345, 1234, 1234, 1234, 1234, 1234];
 
 let keyDown: { [key in string]: boolean } = {};
 let mouseDown: [boolean, boolean, boolean] = [false, false, false];
@@ -85,10 +97,16 @@ async function getClassData(className: string) {
 
 /** 게임 시작 시 작동하는 코드 */
 async function start() {
-    const classData = await getClassData("adc");
+    const classData = await getClassData(CLASS_NAME);
 
     getPlayerById(ID).stat = classData.stat;
     getPlayerById(ID).state.hp = classData.state.hp;
+
+    if (ID === 0) {
+        waveFinish();
+
+        wave = 1;
+    }
 }
 
 start();

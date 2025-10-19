@@ -9,6 +9,10 @@ setInterval(() => {
 
     if (ID === 0) {
         monster.forEach((e) => e.chaseTarget());
+
+        if (leftMobs === 0 && waveTermTime === 0) {
+            waveFinish();
+        }
     }
 
     if (mouseDown[0] && atkWait <= 0) {
@@ -74,6 +78,45 @@ function animationLoop() {
     BODY.style.backgroundPositionY = `${cameraPosition.y}px`;
 
     if (goldP instanceof HTMLParagraphElement) goldP.innerHTML = `${getPlayerById(ID).gold}G`;
+    if (nicknameP instanceof HTMLParagraphElement)
+        nicknameP.innerHTML = `${getPlayerById(ID).nickname}`;
+
+    if (player[ID]?.state) {
+        if (hpBarProgress instanceof HTMLDivElement)
+            hpBarProgress.style.width = `${
+                (player[ID].state.hp[0] / player[ID].state.hp[1]) * 100
+            }%`;
+        if (levelBarProgress instanceof HTMLDivElement)
+            levelBarProgress.style.width = `${
+                (player[ID].exp[1] / needExp[player[ID].exp[0]]) * 100
+            }%`;
+
+        (
+            document.querySelector(".hp-gui>span") as HTMLParagraphElement
+        ).innerHTML = `${player[ID].state.hp[0]} / ${player[ID].state.hp[1]}`;
+
+        (document.querySelector(".level-gui>span") as HTMLParagraphElement).innerHTML = `${
+            player[ID].exp[1]
+        } / ${needExp[player[ID].exp[0]]}`;
+
+        (document.querySelector("#bgui3") as HTMLDivElement).innerHTML = `
+            <p>공격력: ${player[ID].stat.ad}</p>
+            <p>공격속도: ${player[ID].stat.attackSpeed}</p>
+            <p>이동 속도: ${player[ID].stat.moveSpeed * 10}</p>
+            <p>치명타 확률: ${player[ID].stat.criticalChance}</p>
+            <p>치명타 피해: ${player[ID].stat.criticalDamage * 100}%</p>
+            <p>방어력: ${player[ID].stat.armor}</p>
+            <p>강인함: ${player[ID].stat.ccTimeDown}%</p>
+            <p>피해 감소: ${player[ID].stat.armorPercent}%</p>
+            <p id="end">초당 체력 회복: ${player[ID].stat.hpRegeneration}</p>
+        `;
+    }
+
+    if (waveText instanceof HTMLParagraphElement) waveText.innerHTML = `WAVE ${wave}`;
+    if (leftMobText instanceof HTMLParagraphElement) {
+        if (waveTermTime > 0) leftMobText.innerHTML = `남은 시간: ${waveTermTime}`;
+        else leftMobText.innerHTML = `남은 몹: ${leftMobs}`;
+    }
 
     requestAnimationFrame(animationLoop);
 }
@@ -128,17 +171,3 @@ function synchronize() {
 
     sendToPlayers("synchronize", sendData);
 }
-
-let monsterId: number = 101;
-
-const generateMonster = setInterval(() => {
-    monster.push(
-        new Monster(monsterId)
-            .setPosition({ x: rand(-1100, 1100), y: rand(-1100, 1100) })
-            .setHpArmor([120, 120], 20)
-    );
-
-    monsterId += 1;
-}, 1000);
-
-if (ID !== 0) clearInterval(generateMonster);

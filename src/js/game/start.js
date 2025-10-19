@@ -38,12 +38,24 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
 var param = new URLSearchParams(window.location.search);
 var ID = Number(param.get("id"));
 var NICKNAME = param.get("nickname");
+var CLASS_NAME = param.get("class");
+var RUNES = JSON.parse(param.get("runes"));
 var BODY = document.body;
 var centerDiv = document.querySelectorAll(".center");
 var goldP = document.querySelector(".gold");
-var player = [new PlayerClass(ID, NICKNAME)];
+var nicknameP = document.querySelector(".nickname");
+var hpBarProgress = document.querySelector(".hp-gui-bar");
+var levelBarProgress = document.querySelector(".level-gui-bar");
+var waveText = document.querySelector(".title");
+var leftMobText = document.querySelector(".small");
+var player = [new PlayerClass(ID, NICKNAME, CLASS_NAME, RUNES)];
 var monster = [];
 var projectiles = [];
+var wave = 1;
+var leftMobs = 10;
+var monsterId = 101;
+var waveTermTime = 0;
+var needExp = [12345, 1234, 1234, 1234, 1234, 1234];
 var keyDown = {};
 var mouseDown = [false, false, false];
 var winSize = { x: 1600, y: 900 };
@@ -120,11 +132,15 @@ function start() {
         var classData;
         return __generator(this, function (_a) {
             switch (_a.label) {
-                case 0: return [4 /*yield*/, getClassData("adc")];
+                case 0: return [4 /*yield*/, getClassData(CLASS_NAME)];
                 case 1:
                     classData = _a.sent();
                     getPlayerById(ID).stat = classData.stat;
                     getPlayerById(ID).state.hp = classData.state.hp;
+                    if (ID === 0) {
+                        waveFinish();
+                        wave = 1;
+                    }
                     return [2 /*return*/];
             }
         });

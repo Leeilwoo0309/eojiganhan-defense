@@ -46,7 +46,7 @@ var Entity = /** @class */ (function () {
             this.selector = document.querySelector(".".concat(this.entityType, "#p").concat(id));
         }
         this.selector.style.top = "0px";
-        if (this.id === id) {
+        if (this.id === ID) {
             this.selector.style.backgroundColor = "blue";
         }
         this.selector.innerHTML = "\n                <div class=\"hp ".concat(this.entityType).concat(this.id, "\">\n                    <div class=\"hp-progress later ").concat(this.entityType).concat(this.id, "\"></div>\n                    <div class=\"hp-progress barrier ").concat(this.entityType).concat(this.id, "\"></div>\n                    <div class=\"hp-progress ").concat(this.entityType).concat(this.id, "\"></div>\n                </div>\n                <div class=\"damage-print ").concat(this.entityType).concat(this.id, "\">\n                </div>\n        ");
@@ -83,9 +83,9 @@ var Entity = /** @class */ (function () {
                 }
             });
         }
-        // if (this.state.hp[0] <= 0) {
-        //     this.death();
-        // }
+        if (this.state.hp[0] <= 0 && this.entityType === "player") {
+            this.death();
+        }
     };
     Entity.prototype.getDamage = function (damage, type, attakerId, isSent) {
         if (isSent === void 0) { isSent = false; }
@@ -94,6 +94,7 @@ var Entity = /** @class */ (function () {
             finalDamage *= 100 / (100 + this.stat.armor);
         if (type !== "true")
             finalDamage *= 1 - this.stat.armorPercent;
+        finalDamage = Math.floor(finalDamage);
         if (ID !== this.id && this.entityType === "player" && !isSent) {
             sendToPlayers("DAMAGE", {
                 damage: finalDamage,
@@ -142,8 +143,13 @@ var Entity = /** @class */ (function () {
             alerter.style.display = "none";
         }, 600);
         if (this.state.hp[0] <= 0.5) {
-            if (this.entityType === "monster")
-                getPlayerById(attakerId).gold += 150;
+            if (this.entityType === "monster") {
+                getPlayerById(attakerId).gold += 7;
+                getPlayerById(attakerId).exp[1] += 10;
+                player[ID].gold += 10;
+                player[ID].exp[1] += 5;
+                leftMobs -= 1;
+            }
             this.death();
         }
     };

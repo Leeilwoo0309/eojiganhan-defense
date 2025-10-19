@@ -51,7 +51,7 @@ class Entity {
 
         this.selector.style.top = "0px";
 
-        if (this.id === id) {
+        if (this.id === ID) {
             this.selector.style.backgroundColor = "blue";
         }
 
@@ -112,9 +112,9 @@ class Entity {
             });
         }
 
-        // if (this.state.hp[0] <= 0) {
-        //     this.death();
-        // }
+        if (this.state.hp[0] <= 0 && this.entityType === "player") {
+            this.death();
+        }
     }
 
     public getDamage(damage: number, type: DamageType, attakerId: number, isSent: boolean = false) {
@@ -122,6 +122,8 @@ class Entity {
 
         if (type === "melee") finalDamage *= 100 / (100 + this.stat.armor);
         if (type !== "true") finalDamage *= 1 - this.stat.armorPercent;
+
+        finalDamage = Math.floor(finalDamage);
 
         if (ID !== this.id && this.entityType === "player" && !isSent) {
             sendToPlayers("DAMAGE", {
@@ -181,7 +183,15 @@ class Entity {
         }, 600);
 
         if (this.state.hp[0] <= 0.5) {
-            if (this.entityType === "monster") getPlayerById(attakerId).gold += 150;
+            if (this.entityType === "monster") {
+                getPlayerById(attakerId).gold += 7;
+                getPlayerById(attakerId).exp[1] += 10;
+
+                player[ID].gold += 10;
+                player[ID].exp[1] += 5;
+
+                leftMobs -= 1;
+            }
             this.death();
         }
     }

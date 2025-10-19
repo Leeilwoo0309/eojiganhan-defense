@@ -28,8 +28,6 @@
     width: 700px;
     height: 80px;
 
-    border-radius: 0px 0px 15px 15px;
-
     background: rgba(0, 0, 0, 0.348);
 }
 
@@ -57,6 +55,7 @@
     grid-template-columns: 30% 40% 30%;
     grid-template-rows: 100%;
 
+    border-radius: 0px 0px 15px 15px;
     padding-top: 15px;
     padding-bottom: 10px;
 }
@@ -89,4 +88,117 @@
     border-radius: 100%;
 
     background-color: black;
+}
+
+#btm-gui {
+    display: grid;
+
+    grid-template-columns: 30% 40% 30%;
+
+    bottom: 0px;
+
+    height: 150px;
+
+    border-radius: 15px 15px 0 0;
+}
+
+#btm-gui > div {
+    position: relative;
+
+    width: 100%;
+    height: 100%;
+}
+
+#bgui1 {
+    display: grid;
+
+    grid-template-rows: 50% 50%;
+
+    padding-bottom: 15px;
+}
+
+#bgui2 {
+    display: grid;
+
+    grid-template-columns: repeat(3, 33%);
+
+    border-left: 1px solid white;
+    border-right: 1px solid white;
+}
+
+#bgui3 {
+    overflow-y: auto;
+
+    padding: 15px;
+}
+
+#bgui3::-webkit-scrollbar {
+    width: 5px;
+    height: 100%;
+}
+
+#bgui3::-webkit-scrollbar-thumb {
+}
+
+#bgui3::-webkit-scrollbar-track {
+}
+
+#bgui3 > p {
+    margin-bottom: 7px;
+
+    text-align: left;
+    font-size: 20px;
+}
+
+#end {
+    padding-bottom: 30px;
+}
+
+.gui-bar-bg {
+    position: relative;
+
+    height: 50%;
+    width: 85%;
+
+    margin: auto auto auto auto;
+    border-radius: 35px;
+
+    background-color: rgba(255, 255, 255, 0.222);
+}
+
+.gui-bar {
+    height: 100%;
+    width: 98%;
+
+    border-radius: 35px;
+
+    background-color: rgba(255, 255, 255, 0.655);
+}
+
+.hp-gui-bar {
+    background-color: rgba(128, 255, 54, 0.655);
+}
+
+.gui-bar-bg > span {
+    display: flex;
+    position: absolute;
+
+    justify-content: center;
+    flex-direction: column;
+
+    text-align: center;
+    width: 100%;
+    height: 100%;
+}
+
+.skill-btn {
+    position: relative;
+
+    height: 80%;
+    width: 80%;
+
+    margin: auto auto auto auto;
+    border-radius: 15px;
+
+    background-color: rgba(0, 0, 0, 0.468);
 }

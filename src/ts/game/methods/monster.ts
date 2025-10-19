@@ -52,3 +52,39 @@ class Monster extends Entity {
         }
     }
 }
+
+function waveStart() {
+    const needToSpawnMobs = wave + 9;
+    leftMobs = wave + 9;
+    let i = 0;
+
+    const generateMobs = setInterval(() => {
+        monsterId += 1;
+
+        monster.push(
+            new Monster(monsterId)
+                .setPosition({ x: rand(-1100, 1100), y: rand(-1100, 1100) })
+                .setHpArmor([80 * 1.3 ** (wave - 1), 80 * 1.3 ** (wave - 1)], 3 * 1.2 ** (wave - 1))
+        );
+
+        if (i === needToSpawnMobs - 1) clearInterval(generateMobs);
+        else i++;
+    }, 500);
+}
+
+function waveFinish() {
+    sendToPlayers("WAVE_FIN");
+    wave += 1;
+    waveTermTime = 15;
+
+    const timeDecrease = setInterval(() => {
+        waveTermTime -= 1;
+        sendToPlayers("WAVE_TERM_TIME_DEC", { time: waveTermTime });
+
+        if (waveTermTime === 0) clearInterval(timeDecrease);
+    }, 1000);
+
+    setTimeout(() => {
+        waveStart();
+    }, 15000);
+}

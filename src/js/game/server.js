@@ -12,7 +12,7 @@ function sendToPlayers(type, data) {
     }));
 }
 socket.onopen = function () {
-    sendToPlayers("CONNECTED");
+    sendToPlayers("CONNECTED", { className: CLASS_NAME, runes: RUNES });
     socket.onmessage = function (event) {
         var blob = event.data;
         var reader = new FileReader();
@@ -22,15 +22,32 @@ socket.onopen = function () {
             var message = receivedJson.body.type;
             if (message === "CONNECTED") {
                 player = player.filter(function (e) { return e.id !== receivedJson.header.id; });
-                player.push(new PlayerClass(receivedJson.header.id, receivedJson.header.nickname));
+                player.push(new PlayerClass(receivedJson.header.id, receivedJson.header.nickname, 
+                //@ts-ignore
+                receivedJson.body.data.className, 
+                //@ts-ignore
+                receivedJson.body.data.runes));
                 player.sort(function (x, y) { return x.id - y.id; });
                 sendToPlayers("PLAYER", getPlayerById(ID));
             }
             else if (message == "PLAYER") {
                 player = player.filter(function (e) { return e.id !== receivedJson.header.id; });
                 //@ts-ignore
-                player.push(new PlayerClass(receivedJson.header.id, receivedJson.header.nickname));
+                player.push(new PlayerClass(receivedJson.header.id, receivedJson.header.nickname, 
+                //@ts-ignore
+                receivedJson.body.data.className, 
+                //@ts-ignore
+                receivedJson.body.data.runes));
                 player.sort(function (x, y) { return x.id - y.id; });
+            }
+            else if (message == "WAVE_TERM_TIME_DEC") {
+                //@ts-ignore
+                waveTermTime = receivedJson.body.data.time;
+            }
+            else if (message == "WAVE_FIN") {
+                wave += 1;
+                leftMobs = 0;
+                document.querySelector(".monsters-div").innerHTML = "";
             }
             else if (message == "DAMAGE") {
                 //@ts-ignore

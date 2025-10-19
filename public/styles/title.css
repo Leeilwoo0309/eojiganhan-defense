@@ -1,0 +1,122 @@
+@font-face {
+    font-family: "Isamanru";
+    src: url("https://cdn.jsdelivr.net/gh/projectnoonnu/noonfonts_20-10@1.0/GongGothicLight.woff")
+        format("woff");
+    font-weight: 300;
+    font-display: swap;
+}
+
+body {
+    margin: 0;
+    padding: 30px;
+
+    font-family: "Isamanru";
+}
+
+main {
+    display: grid;
+
+    grid-template-columns: 60% 40%;
+}
+
+#left {
+    background-color: rgb(210, 235, 255);
+
+    border-right: 1px solid rgba(0, 0, 0, 0.253);
+
+    padding-bottom: 300px;
+}
+
+#right {
+    width: 100%;
+    height: 100%;
+
+    background-color: rgb(210, 235, 255);
+}
+
+#class-div {
+    display: flex;
+
+    margin-bottom: 20px;
+
+    justify-content: center;
+}
+
+.class-btn {
+    display: flex;
+
+    justify-content: center;
+    align-items: center;
+
+    height: 100px;
+    width: 100px;
+
+    margin: 10px;
+    border-radius: 100%;
+
+    background-color: white;
+    box-shadow: 0px 0px 3px 2px rgba(0, 0, 0, 0.1);
+
+    font-size: 20px;
+
+    transition-duration: 300ms;
+}
+
+.class-btn:hover {
+    box-shadow: 0px 0px 3px 5px rgba(8, 56, 83, 0.308);
+    background-color: hsl(180, 100%, 93%);
+
+    transform: scale(1.1);
+}
+
+.selected {
+    box-shadow: 0px 0px 3px 5px rgba(8, 56, 83, 0.308);
+    background-color: hsl(180, 36%, 88%);
+
+    transform: scale(1.1);
+}
+
+.class-passive-btn {
+    margin: 20px;
+    border-radius: 10px;
+    padding: 10px;
+
+    background-color: rgb(255, 255, 255);
+    box-shadow: 0px 0px 3px 2px rgba(0, 0, 0, 0.1);
+
+    transition: 300ms;
+}
+
+.class-passive-btn > h2 {
+    color: rgb(36, 156, 255);
+}
+
+.class-passive-btn:hover {
+    box-shadow: 0px -5px 10px 7px rgba(0, 0, 0, 0.1);
+    transform: scale(1.02) translate(0px, 10px);
+}
+
+#start-btn {
+    display: flex;
+
+    justify-content: center;
+    align-items: center;
+
+    width: 50%;
+    height: 50px;
+
+    margin-left: auto;
+    margin-right: auto;
+    border-radius: 25px;
+
+    background-color: rgb(36, 36, 36);
+    box-shadow: 0px 0px 10px 3px rgba(0, 0, 0, 0.5);
+
+    color: white;
+
+    transition-duration: 100ms;
+}
+
+#start-btn:hover {
+    transform: scale(1.04);
+}

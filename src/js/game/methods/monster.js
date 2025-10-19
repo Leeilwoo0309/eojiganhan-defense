@@ -62,3 +62,32 @@ var Monster = /** @class */ (function (_super) {
     };
     return Monster;
 }(Entity));
+function waveStart() {
+    var needToSpawnMobs = wave + 9;
+    leftMobs = wave + 9;
+    var i = 0;
+    var generateMobs = setInterval(function () {
+        monsterId += 1;
+        monster.push(new Monster(monsterId)
+            .setPosition({ x: rand(-1100, 1100), y: rand(-1100, 1100) })
+            .setHpArmor([80 * Math.pow(1.3, (wave - 1)), 80 * Math.pow(1.3, (wave - 1))], 3 * Math.pow(1.2, (wave - 1))));
+        if (i === needToSpawnMobs - 1)
+            clearInterval(generateMobs);
+        else
+            i++;
+    }, 500);
+}
+function waveFinish() {
+    sendToPlayers("WAVE_FIN");
+    wave += 1;
+    waveTermTime = 15;
+    var timeDecrease = setInterval(function () {
+        waveTermTime -= 1;
+        sendToPlayers("WAVE_TERM_TIME_DEC", { time: waveTermTime });
+        if (waveTermTime === 0)
+            clearInterval(timeDecrease);
+    }, 1000);
+    setTimeout(function () {
+        waveStart();
+    }, 15000);
+}
