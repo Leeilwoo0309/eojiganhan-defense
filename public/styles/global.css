@@ -23,3 +23,8 @@ div {
     position: absolute;
     will-change: transform;
 }
+
+hr {
+    padding: 0;
+    margin: 0;
+}

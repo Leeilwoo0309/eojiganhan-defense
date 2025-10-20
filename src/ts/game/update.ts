@@ -73,6 +73,9 @@ function animationLoop() {
     centerDiv.forEach((e, i) => {
         e.style.left = `${winSize.x / 2 - parseInt(e.style.width) / 2}px`;
     });
+    center2Div.forEach((e, i) => {
+        e.style.top = `${winSize.y / 2 - parseInt(e.style.height) / 2}px`;
+    });
 
     BODY.style.backgroundPositionX = `${-cameraPosition.x}px`;
     BODY.style.backgroundPositionY = `${cameraPosition.y}px`;

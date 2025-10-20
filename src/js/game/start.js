@@ -42,6 +42,7 @@ var CLASS_NAME = param.get("class");
 var RUNES = JSON.parse(param.get("runes"));
 var BODY = document.body;
 var centerDiv = document.querySelectorAll(".center");
+var center2Div = document.querySelectorAll(".center2");
 var goldP = document.querySelector(".gold");
 var nicknameP = document.querySelector(".nickname");
 var hpBarProgress = document.querySelector(".hp-gui-bar");
@@ -56,6 +57,9 @@ var leftMobs = 10;
 var monsterId = 101;
 var waveTermTime = 0;
 var needExp = [12345, 1234, 1234, 1234, 1234, 1234];
+var isShopOpen = false;
+var shopKind = "passive";
+var shopSkill = 0;
 var keyDown = {};
 var mouseDown = [false, false, false];
 var winSize = { x: 1600, y: 900 };
@@ -90,6 +94,28 @@ document.body.addEventListener("keydown", function (e) {
     var key = e.key.toLowerCase();
     if (key === " ")
         key = "space";
+    if (key === "p" || key === "l" || key === ";") {
+        if (!isShopOpen)
+            isShopOpen = true;
+        else if (isShopOpen)
+            if (shopKind === "passive" && key === "p")
+                isShopOpen = false;
+            else if (shopKind === "skill") {
+                if (shopSkill === 1 && key === "l")
+                    isShopOpen = false;
+                else if (shopSkill === 2 && key === ";")
+                    isShopOpen = false;
+            }
+        if (key === "p")
+            shopKind = "passive";
+        else
+            shopKind = "skill";
+        if (key === "l")
+            shopSkill = 1;
+        else if (key === ";")
+            shopSkill = 2;
+        shopStart();
+    }
     keyDown[key] = true;
 });
 document.body.addEventListener("keyup", function (e) {

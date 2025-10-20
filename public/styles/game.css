@@ -202,3 +202,129 @@
 
     background-color: rgba(0, 0, 0, 0.468);
 }
+
+#shop-div {
+    display: grid;
+
+    grid-template-rows: 9% 91%;
+
+    border-radius: 15px;
+    background: rgba(0, 0, 0, 0.622);
+
+    color: white;
+}
+
+.shop-main {
+    position: relative;
+    display: grid;
+
+    grid-template-columns: 70% 30%;
+
+    height: 100%;
+}
+
+#shop-div > h2 {
+    padding-bottom: 0px;
+
+    text-align: center;
+    font-size: 30px;
+}
+
+#shop-left {
+    border-right: 1px solid white;
+}
+
+.shop-menu {
+    position: relative;
+
+    width: 100%;
+    height: 100%;
+
+    border-top: 1px solid white;
+}
+
+.shop-menu > h2 {
+    text-align: center;
+    font-size: 25px;
+}
+
+.shop-card {
+    position: relative;
+    display: grid;
+
+    grid-template-rows: 80% 20%;
+
+    width: 150px;
+    height: 170px;
+
+    margin: auto;
+    border: 1px solid white;
+    border-radius: 15px;
+    padding: 20px;
+
+    background-color: rgba(0, 0, 0, 0.392);
+
+    font-size: 20px;
+
+    transition-duration: 100ms;
+}
+
+.shop-card:hover {
+    background-color: rgba(0, 0, 0, 0.6);
+    box-shadow: 0 0 10px 2px black;
+    transform: scale(1.03);
+}
+
+.shop-buy-btn {
+    display: flex;
+
+    align-items: center;
+    justify-content: center;
+
+    height: 30px;
+
+    border-radius: 15px;
+
+    background-color: white;
+
+    color: black;
+
+    transition-duration: 100ms;
+}
+
+.shop-buy-btn:hover {
+    background-color: #b8b8b8;
+}
+
+.shop-gapan {
+    position: relative;
+    display: grid;
+
+    width: 95%;
+
+    grid-template-columns: repeat(5, 20%);
+    grid-template-rows: repeat(3, 55%);
+    padding: 20px;
+}
+
+.shop-div2 {
+    position: relative;
+}
+
+.shop-indicator {
+    border-bottom: 1px solid white;
+    padding-bottom: 20px;
+}
+
+#shop-des {
+    padding: 30px;
+}
+
+#shop-des {
+    font-size: 30px;
+}
+
+#shop-des > .shop-buy-btn {
+    border-radius: 30px;
+    padding: 10px;
+}

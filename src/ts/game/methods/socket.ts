@@ -1,3 +1,0 @@
-// function sendProtocol() {
-//     socket.send({})
-// }

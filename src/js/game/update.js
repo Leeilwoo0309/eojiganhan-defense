@@ -70,6 +70,9 @@ function animationLoop() {
     centerDiv.forEach(function (e, i) {
         e.style.left = "".concat(winSize.x / 2 - parseInt(e.style.width) / 2, "px");
     });
+    center2Div.forEach(function (e, i) {
+        e.style.top = "".concat(winSize.y / 2 - parseInt(e.style.height) / 2, "px");
+    });
     BODY.style.backgroundPositionX = "".concat(-cameraPosition.x, "px");
     BODY.style.backgroundPositionY = "".concat(cameraPosition.y, "px");
     if (goldP instanceof HTMLParagraphElement)

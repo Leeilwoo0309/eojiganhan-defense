@@ -7,6 +7,7 @@ const RUNES: number[] = JSON.parse(param.get("runes") as string);
 const BODY = document.body;
 
 const centerDiv: NodeListOf<HTMLDivElement> = document.querySelectorAll(".center");
+const center2Div: NodeListOf<HTMLDivElement> = document.querySelectorAll(".center2");
 const goldP = document.querySelector(".gold");
 const nicknameP = document.querySelector(".nickname");
 const hpBarProgress = document.querySelector(".hp-gui-bar");
@@ -22,6 +23,10 @@ let leftMobs: number = 10;
 let monsterId: number = 101;
 let waveTermTime: number = 0;
 const needExp: number[] = [12345, 1234, 1234, 1234, 1234, 1234];
+
+let isShopOpen: boolean = false;
+let shopKind: "passive" | "skill" = "passive";
+let shopSkill: number = 0;
 
 let keyDown: { [key in string]: boolean } = {};
 let mouseDown: [boolean, boolean, boolean] = [false, false, false];
@@ -60,6 +65,23 @@ document.body.addEventListener("keydown", (e) => {
     let key = e.key.toLowerCase();
 
     if (key === " ") key = "space";
+    if (key === "p" || key === "l" || key === ";") {
+        if (!isShopOpen) isShopOpen = true;
+        else if (isShopOpen)
+            if (shopKind === "passive" && key === "p") isShopOpen = false;
+            else if (shopKind === "skill") {
+                if (shopSkill === 1 && key === "l") isShopOpen = false;
+                else if (shopSkill === 2 && key === ";") isShopOpen = false;
+            }
+
+        if (key === "p") shopKind = "passive";
+        else shopKind = "skill";
+
+        if (key === "l") shopSkill = 1;
+        else if (key === ";") shopSkill = 2;
+
+        shopStart();
+    }
     keyDown[key] = true;
 });
 
