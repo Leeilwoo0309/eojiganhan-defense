@@ -1,143 +1,138 @@
 const shopDiv = document.querySelector("#shop-div");
 const shopMain = document.querySelector(".shop-gapan");
+const buyBtn = document.querySelector(".shop-buy-btn.real");
 
-const passives = [
-    { id: 0, des: "어쩌고 저쩌고0", cost: 500, isBought: false },
-    { id: 1, des: "어쩌고 저쩌고1", cost: 500, isBought: false },
-    { id: 2, des: "어쩌고 저쩌고2", cost: 500, isBought: false },
-    { id: 3, des: "어쩌고 저쩌고3", cost: 500, isBought: false },
-    { id: 4, des: "어쩌고 저쩌고4", cost: 500, isBought: false },
-    { id: 5, des: "어쩌고 저쩌고5", cost: 500, isBought: false },
-    { id: 6, des: "어쩌고 저쩌고6", cost: 500, isBought: false },
-];
-
-const skills = [
-    { id: 0, des: "어쩌고 저쩌고0", cost: 500, isBought: false },
-    { id: 1, des: "어쩌고 저쩌고1", cost: 500, isBought: false },
-    { id: 2, des: "어쩌고 저쩌고2", cost: 500, isBought: false },
-    { id: 3, des: "어쩌고 저쩌고3", cost: 500, isBought: false },
-    { id: 4, des: "어쩌고 저쩌고4", cost: 500, isBought: false },
-    { id: 5, des: "어쩌고 저쩌고5", cost: 500, isBought: false },
-    { id: 6, des: "어쩌고 저쩌고6", cost: 500, isBought: false },
-];
+let passives: Passive[] = [];
+let skills: Passive[] = [];
 
 let selected = {
-    passives: 0,
-    skills: 0,
+    passives: -1,
+    skills: -1,
 };
 
-function shopStart() {
-    if (shopDiv instanceof HTMLDivElement) {
-        if (isShopOpen) {
-            shopDiv.style.display = "";
+// 아이템 캐시 맵 (성능 최적화)
+const passiveMap = new Map<number, Passive>();
+const skillMap = new Map<number, Passive>();
 
-            if (shopKind === "passive") {
-                shopDiv.children[0].innerHTML = "어지간한 상점 - 패시브 상점";
-
-                if (shopMain instanceof HTMLDivElement) {
-                    shopMain.innerHTML = ``;
-
-                    passives.forEach((e) => {
-                        if (e.isBought) return;
-
-                        shopMain.innerHTML += `
-                        <div class="shop-card" id="card-${e.id}">
-                            ${e.des}
-                            <p class="shop-buy-btn" id="pass-${e.id}">보기 (G${e.cost})</p>
-                        </div>
-                    `;
-                    });
-
-                    document.querySelectorAll(`.shop-card`).forEach((e, i) => {
-                        e.addEventListener("click", () => {
-                            selected.passives = parseInt(e.id.split("-")[1]);
-                            shopCardUpdate();
-                        });
-                    });
-                }
-            } else {
-                shopDiv.children[0].innerHTML = `어지간한 상점 - 스킬${shopSkill} 상점`;
-
-                if (shopMain instanceof HTMLDivElement) {
-                    shopMain.innerHTML = ``;
-                    skills.forEach((e) => {
-                        if (e.isBought) return;
-                        shopMain.innerHTML += `
-                        <div class="shop-card" id="card-${e.id}">
-                            ${e.des}
-                            <p class="shop-buy-btn" id="pass-${e.id}">보기 (G${e.cost})</p>
-                        </div>
-                    `;
-                    });
-
-                    document.querySelectorAll(`.shop-card`).forEach((e, i) => {
-                        e.addEventListener("click", () => {
-                            selected.skills = parseInt(e.id.split("-")[1]);
-                            shopCardUpdate();
-                        });
-                    });
-                }
-            }
-            shopCardUpdate();
-        } else {
-            shopDiv.style.display = "none";
-        }
-    }
+// 아이템 맵 업데이트 함수 (passives/skills 배열이 변경될 때 호출)
+function updateItemMaps() {
+    passiveMap.clear();
+    skillMap.clear();
+    passives.forEach((p) => passiveMap.set(p.id, p));
+    skills.forEach((s) => skillMap.set(s.id, s));
 }
 
+// ID로 아이템 조회 (O(1) 성능)
+function getItemById(id: number, isPassive: boolean): Passive | null {
+    return isPassive ? passiveMap.get(id) ?? null : skillMap.get(id) ?? null;
+}
+
+// 상점 카드 HTML 생성
+function createShopCard(item: Passive): string {
+    return `
+        <div class="shop-card" data-item-id="${item.id}">
+            ${item.des}
+            <p class="shop-buy-btn" id="pass-${item.id}">보기 (G${item.cost})</p>
+        </div>
+    `;
+}
+
+// 상점 메인 렌더링
+function renderShopMain(items: Passive[], isPassive: boolean) {
+    if (!(shopMain instanceof HTMLDivElement)) return;
+
+    const availableItems = items.filter((item) => !item.isBought);
+    shopMain.innerHTML = availableItems.map(createShopCard).join("");
+
+    // 이벤트 위임 사용 (이벤트 리스너 누수 방지)
+    shopMain.onclick = (e) => {
+        const card = (e.target as HTMLElement).closest(".shop-card");
+        if (!card) return;
+
+        const itemId = parseInt(card.getAttribute("data-item-id") || "-1");
+        if (isPassive) {
+            selected.passives = itemId;
+        } else {
+            selected.skills = itemId;
+        }
+        shopCardUpdate();
+    };
+}
+
+// 상점 시작
+function shopStart() {
+    if (!(shopDiv instanceof HTMLDivElement)) return;
+
+    if (!isShopOpen) {
+        shopDiv.style.display = "none";
+        return;
+    }
+
+    // 맵 업데이트 (매번 최신 데이터 반영)
+    updateItemMaps();
+
+    shopDiv.style.display = "";
+    const isPassive = shopKind === "passive";
+
+    // 타이틀 설정
+    shopDiv.children[0].innerHTML = isPassive
+        ? "어지간한 상점 - 패시브 상점"
+        : `어지간한 상점 - 스킬${shopSkill} 상점`;
+
+    // 아이템 목록 렌더링
+    renderShopMain(isPassive ? passives : skills, isPassive);
+    shopCardUpdate();
+}
+
+// 상점 카드 설명 업데이트
 function shopCardUpdate() {
     const description = document.querySelector("#shop-des");
+    if (!(description instanceof HTMLDivElement)) return;
 
-    if (description instanceof HTMLDivElement) {
-        if (shopKind === "passive") {
-            if (selected.passives < 0) {
-                description.children[0].innerHTML = ``;
-                description.children[1].innerHTML = `패시브를 선택해주세요.`;
-            } else {
-                description.children[0].innerHTML = `${passives[selected.passives].des}`;
-                description.children[1].innerHTML = `구매 (G${passives[selected.passives].cost})`;
-            }
-        } else {
-            if (selected.skills < 0) {
-                description.children[0].innerHTML = ``;
-                description.children[1].innerHTML = `스킬을 선택해주세요.`;
-            } else {
-                description.children[0].innerHTML = `${skills[selected.skills].des}`;
-                description.children[1].innerHTML = `구매 (G${skills[selected.skills].cost})`;
-            }
-        }
+    const isPassive = shopKind === "passive";
+    const selectedId = isPassive ? selected.passives : selected.skills;
+
+    if (selectedId < 0) {
+        description.children[0].innerHTML = "";
+        description.children[1].innerHTML = `${isPassive ? "패시브" : "스킬"}를 선택해주세요.`;
+        return;
     }
+
+    const item = getItemById(selectedId, isPassive);
+    if (!item) {
+        console.error(`아이템을 찾을 수 없습니다: ID ${selectedId}`);
+        return;
+    }
+
+    description.children[0].innerHTML = item.infoDes;
+    description.children[1].innerHTML = `구매 (G${item.cost})`;
 }
 
+// 상점 구매
 function shopBuy() {
     const p = getPlayerById(ID);
-    if (shopKind === "passive") {
-        if (selected.passives < 0) return;
-        if (p.gold >= passives[selected.passives].cost) {
-            passives[selected.passives].isBought = true;
+    const isPassive = shopKind === "passive";
+    const selectedId = isPassive ? selected.passives : selected.skills;
 
-            p.passives.push(passives[selected.passives].id);
-            p.gold -= passives[selected.passives].cost;
+    if (selectedId < 0) return;
 
-            selected.passives = -1;
-        }
+    const item = getItemById(selectedId, isPassive);
+    if (!item || p.gold < item.cost) return;
+
+    // 구매 처리
+    item.isBought = true;
+    p.gold -= item.cost;
+
+    if (isPassive) {
+        p.passives.push(item.id);
+        selected.passives = -1;
     } else {
-        if (selected.skills < 0) return;
-        if (p.gold >= skills[selected.skills].cost) {
-            skills[selected.skills].isBought = true;
-
-            p.skills[shopSkill - 1] = skills[selected.skills].id;
-            p.gold -= skills[selected.skills].cost;
-
-            selected.skills = -1;
-        }
+        p.skills[shopSkill - 1] = item.id;
+        selected.skills = -1;
     }
 
     shopStart();
 }
 
-const buyBtn = document.querySelector(".shop-buy-btn.real");
-
-buyBtn?.addEventListener("click", () => {
-    shopBuy();
-});
+// 이벤트 리스너 초기화 (한 번만 실행)
+buyBtn?.addEventListener("click", shopBuy);

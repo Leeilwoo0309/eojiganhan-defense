@@ -117,12 +117,31 @@ async function getClassData(className: string) {
     return ret;
 }
 
+async function getPassive(className: string) {
+    let ret = await fetch(`http://kimchi-game.kro.kr:1975/class/${className}/passives`, {
+        method: "GET",
+    }).then((r) => r.json());
+
+    return ret;
+}
+
+async function getSkill(className: string) {
+    let ret = await fetch(`http://kimchi-game.kro.kr:1975/class/${className}/skills`, {
+        method: "GET",
+    }).then((r) => r.json());
+
+    return ret;
+}
+
 /** 게임 시작 시 작동하는 코드 */
 async function start() {
     const classData = await getClassData(CLASS_NAME);
 
     getPlayerById(ID).stat = classData.stat;
     getPlayerById(ID).state.hp = classData.state.hp;
+
+    passives = await getPassive(CLASS_NAME);
+    skills = await getSkill(CLASS_NAME);
 
     if (ID === 0) {
         waveFinish();

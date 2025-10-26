@@ -152,6 +152,36 @@ function getClassData(className) {
         });
     });
 }
+function getPassive(className) {
+    return __awaiter(this, void 0, void 0, function () {
+        var ret;
+        return __generator(this, function (_a) {
+            switch (_a.label) {
+                case 0: return [4 /*yield*/, fetch("http://kimchi-game.kro.kr:1975/class/".concat(className, "/passives"), {
+                        method: "GET",
+                    }).then(function (r) { return r.json(); })];
+                case 1:
+                    ret = _a.sent();
+                    return [2 /*return*/, ret];
+            }
+        });
+    });
+}
+function getSkill(className) {
+    return __awaiter(this, void 0, void 0, function () {
+        var ret;
+        return __generator(this, function (_a) {
+            switch (_a.label) {
+                case 0: return [4 /*yield*/, fetch("http://kimchi-game.kro.kr:1975/class/".concat(className, "/skills"), {
+                        method: "GET",
+                    }).then(function (r) { return r.json(); })];
+                case 1:
+                    ret = _a.sent();
+                    return [2 /*return*/, ret];
+            }
+        });
+    });
+}
 /** 게임 시작 시 작동하는 코드 */
 function start() {
     return __awaiter(this, void 0, void 0, function () {
@@ -163,6 +193,12 @@ function start() {
                     classData = _a.sent();
                     getPlayerById(ID).stat = classData.stat;
                     getPlayerById(ID).state.hp = classData.state.hp;
+                    return [4 /*yield*/, getPassive(CLASS_NAME)];
+                case 2:
+                    passives = _a.sent();
+                    return [4 /*yield*/, getSkill(CLASS_NAME)];
+                case 3:
+                    skills = _a.sent();
                     if (ID === 0) {
                         waveFinish();
                         wave = 1;

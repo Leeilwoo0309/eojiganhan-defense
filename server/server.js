@@ -5,6 +5,7 @@ const express = require("express");
 const fs = require("fs").promises;
 const path = require("path");
 const cors = require("cors");
+const os = require("os");
 
 const wss = new WebSocket.Server({ port: PORT.ws });
 const app = express();
@@ -84,6 +85,20 @@ const readClassFile = async (basePath, className, res) => {
     }
 };
 
+const getLocalIP = () => {
+    const interfaces = os.networkInterfaces();
+    for (const name of Object.keys(interfaces)) {
+        for (const iface of interfaces[name]) {
+            // IPv4이고 내부 주소가 아닌 경우
+            if (iface.family === "IPv4" && !iface.internal) {
+                return iface.address;
+            }
+        }
+    }
+    return "localhost";
+};
+const localIP = getLocalIP();
+
 app.get("/class/:class", async (req, res) => {
     await readClassFile("", req.params.class, res);
 });
@@ -111,7 +126,7 @@ app.listen(PORT.api, () => {
             colors.reset +
             colors.yellow +
             colors.bright +
-            `http://localhost:${PORT.ws}` +
+            `http://${localIP}:${PORT.ws}` +
             colors.reset
     );
     console.log(
@@ -120,7 +135,7 @@ app.listen(PORT.api, () => {
             colors.reset +
             colors.yellow +
             colors.bright +
-            `http://localhost:${PORT.api}` +
+            `http://${localIP}:${PORT.api}` +
             colors.reset
     );
     console.log(colors.green + "✅ Status: " + colors.bright + "Running" + colors.reset);
