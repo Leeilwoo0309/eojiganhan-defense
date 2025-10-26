@@ -11,7 +11,7 @@ var Projectile = /** @class */ (function () {
             isIgnoreObj: false,
             isCanPass: false, // 관통 가능한가
             tag: "", // 태그
-            target: [false, undefined], // 타겟 [여부, 대상]
+            target: [false, undefined, "player"], // 타겟 [여부, 대상, 종류]
             id: ID, // 발사자
             damageType: "melee",
         };
@@ -51,10 +51,7 @@ var Projectile = /** @class */ (function () {
         if (_main instanceof HTMLDivElement) {
             _main.appendChild(_projectile);
         }
-        var target = Math.floor(Math.random() * 2);
-        // if (players[enemyTeam].length === 1) target = 0;
-        var update = setInterval(function () {
-            // clearInterval(update);
+        var update = function () {
             _this._movedDistance += _this.projectileINIT.speed;
             if (_this.projectileINIT.isTarget) {
                 // this.projectileINIT.angle = Math.atan2(
@@ -79,7 +76,6 @@ var Projectile = /** @class */ (function () {
                     if (_this.isCollideWithPlayer2(_projectile, e.id) &&
                         !_this.projectileINIT.isCollide) {
                         _this.projectileINIT.isCollide = true;
-                        // damage(damageAmount, e.id);
                         e.getDamage(_this.projectileHit.damage, _this.projectileINIT.damageType, _this.projectileINIT.id);
                         if (!_this.projectileINIT.isCanPass)
                             _this.projectileINIT.isArrive = false;
@@ -87,23 +83,24 @@ var Projectile = /** @class */ (function () {
                 });
             }
             // 화면 밖으로 나가면 탄환 제거
-            objects.forEach(function (e) {
-                if (_this.projectileINIT.isIgnoreObj)
-                    return;
+            if (!_this.projectileINIT.isIgnoreObj) {
                 if (Math.abs(_this.positionSize.x) > 1200 || Math.abs(_this.positionSize.y) > 1200) {
                     _this.projectileINIT.isArrive = false;
                 }
-            });
+            }
             if (_this._movedDistance >= _this.projectileINIT.reach * 1.5 &&
                 _this.projectileINIT.isArrive) {
                 _this.projectileINIT.isArrive = false;
             }
             if (!_this.projectileINIT.isArrive) {
-                clearInterval(update);
+                // clearInterval(update);
                 if (_main instanceof HTMLDivElement)
                     _main.removeChild(_projectile);
+                return;
             }
-        }, 16);
+            requestAnimationFrame(update);
+        };
+        requestAnimationFrame(update);
     };
     Projectile.prototype.isCollideWithPlayer2 = function (projectileSelector, id) {
         var rect1 = getMonsterById(id).selector.getBoundingClientRect();
@@ -139,7 +136,7 @@ var ProjectileBuilder = /** @class */ (function () {
             reach: info.reach,
             speed: info.speed,
             tag: info.tag,
-            target: (_e = info === null || info === void 0 ? void 0 : info.target) !== null && _e !== void 0 ? _e : [false, undefined],
+            target: (_e = info === null || info === void 0 ? void 0 : info.target) !== null && _e !== void 0 ? _e : [false, undefined, "monster"],
             id: info.id,
             isTarget: info.isTarget,
             damageType: info.damageType,

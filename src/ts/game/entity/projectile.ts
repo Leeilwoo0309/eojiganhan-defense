@@ -9,7 +9,7 @@ type ProjectileInfoINIT = {
     isCanPass?: boolean;
     isTarget?: boolean;
     tag: string;
-    target?: [boolean, string | undefined];
+    target?: [boolean, string | undefined, "player" | "monster"];
     id: number;
     damageType: DamageType;
 };
@@ -30,7 +30,7 @@ class Projectile {
         isIgnoreObj: false,
         isCanPass: false, // 관통 가능한가
         tag: "", // 태그
-        target: [false, undefined], // 타겟 [여부, 대상]
+        target: [false, undefined, "player"], // 타겟 [여부, 대상, 종류]
         id: ID, // 발사자
         damageType: "melee",
     };
@@ -62,6 +62,7 @@ class Projectile {
         _projectile.style.width = `${this.positionSize.width}px`;
         _projectile.style.height = `${this.positionSize.height}px`;
         _projectile.style.rotate = `${-this.projectileINIT.angle + Math.PI / 2}rad`;
+
         _projectile.style.left = `${
             this.positionSize.x - cameraPosition.x - this.positionSize.width / 2
         }px`;
@@ -78,12 +79,7 @@ class Projectile {
             _main.appendChild(_projectile);
         }
 
-        let target = Math.floor(Math.random() * 2);
-
-        // if (players[enemyTeam].length === 1) target = 0;
-
-        const update = setInterval(() => {
-            // clearInterval(update);
+        const update = () => {
             this._movedDistance += this.projectileINIT.speed;
 
             if (this.projectileINIT.isTarget) {
@@ -117,8 +113,6 @@ class Projectile {
                     ) {
                         this.projectileINIT.isCollide = true;
 
-                        // damage(damageAmount, e.id);
-
                         e.getDamage(
                             this.projectileHit.damage,
                             this.projectileINIT.damageType,
@@ -131,12 +125,11 @@ class Projectile {
             }
 
             // 화면 밖으로 나가면 탄환 제거
-            objects.forEach((e) => {
-                if (this.projectileINIT.isIgnoreObj) return;
+            if (!this.projectileINIT.isIgnoreObj) {
                 if (Math.abs(this.positionSize.x) > 1200 || Math.abs(this.positionSize.y) > 1200) {
                     this.projectileINIT.isArrive = false;
                 }
-            });
+            }
 
             if (
                 this._movedDistance >= this.projectileINIT.reach * 1.5 &&
@@ -146,11 +139,14 @@ class Projectile {
             }
 
             if (!this.projectileINIT.isArrive) {
-                clearInterval(update);
-
+                // clearInterval(update);
                 if (_main instanceof HTMLDivElement) _main.removeChild(_projectile);
+                return;
             }
-        }, 16);
+            requestAnimationFrame(update);
+        };
+
+        requestAnimationFrame(update);
     }
 
     public isCollideWithPlayer2(projectileSelector: HTMLDivElement, id: number): boolean {
@@ -195,7 +191,7 @@ class ProjectileBuilder {
             reach: info.reach,
             speed: info.speed,
             tag: info.tag,
-            target: info?.target ?? [false, undefined],
+            target: info?.target ?? [false, undefined, "monster"],
             id: info.id,
             isTarget: info.isTarget,
             damageType: info.damageType,

@@ -85,6 +85,9 @@
     width: var(--projectil-size);
     height: var(--projectil-size);
 
+    /* left: 0 !important;
+    top: 0 !important; */
+
     border-radius: 100%;
 
     background-color: black;
