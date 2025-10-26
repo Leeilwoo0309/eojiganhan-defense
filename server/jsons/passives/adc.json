@@ -1,0 +1,63 @@
+[
+    {
+        "id": 100,
+        "des": "몬스터 공격 시 공격 속도 상승",
+        "infoDes": "몬스터 공격 시 공격 속도가 8% 상승합니다. 이 효과는 6회까지 중첩됩니다. (중첩 지속 시간: 3초)",
+        "cost": 1500,
+        "isBought": false,
+        "effect": {
+            "attackSpeed": 1.08
+        }
+    },
+    {
+        "id": 101,
+        "des": "몬스터 공격 시 공격력 상승",
+        "infoDes": "몬스터 공격 시 공격력이 3% 상승합니다. 이 효과는 12회까지 중첩됩니다. (중첩 지속 시간: 3초)",
+        "cost": 1500,
+        "isBought": false,
+        "effect": {
+            "ad": 1.03
+        }
+    },
+    {
+        "id": 102,
+        "des": "치명타 피해 / 치명타 확률 상승",
+        "infoDes": "치명타 피해량 35%, 치명타 확률 30% 상승합니다.",
+        "cost": 1500,
+        "isBought": false,
+        "effect": {
+            "criticalDamage": 0.35,
+            "criticalChance": 0.3
+        }
+    },
+    {
+        "id": 103,
+        "des": "준보스 이상의 몬스터 공격 시 체력 비례 피해",
+        "infoDes": "보스나 준보스를 공격할 시, 몬스터 현재 체력의 5%에 해당하는 물리 피해를 추가로 입힙니다.",
+        "cost": 1500,
+        "isBought": false,
+        "effect": {
+            "healthRatio": ["current", 0.05]
+        }
+    },
+    {
+        "id": 104,
+        "des": "3타 적중 시 체력 비례 피해",
+        "infoDes": "몬스터를 3타 적중 시, 최대 체력의 7%에 해당하는 고정 피해를 추가로 입힙니다.",
+        "cost": 1500,
+        "isBought": false,
+        "effect": {
+            "healthRatio": ["max", 0.07]
+        }
+    },
+    {
+        "id": 105,
+        "des": "멀수록 피해 증가",
+        "infoDes": "몬스터를 더 멀리서 적중할수록 피해량이 최대 30% 증가합니다.",
+        "cost": 1500,
+        "isBought": false,
+        "effect": {
+            "damage": 1.3
+        }
+    }
+]

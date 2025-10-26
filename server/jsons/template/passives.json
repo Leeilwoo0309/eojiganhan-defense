@@ -1,0 +1,9 @@
+[
+    { "id": 100, "des": "설명", "cost": 1500, "isBought": false },
+    { "id": 101, "des": "설명", "cost": 1500, "isBought": false },
+    { "id": 102, "des": "설명", "cost": 1500, "isBought": false },
+    { "id": 103, "des": "설명", "cost": 1500, "isBought": false },
+    { "id": 104, "des": "설명", "cost": 1500, "isBought": false },
+    { "id": 105, "des": "설명", "cost": 1500, "isBought": false },
+    { "id": 106, "des": "설명", "cost": 1500, "isBought": false }
+]
